@@ -6,7 +6,7 @@
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
     "styled-components": "^4.2.0",
-    "takearest": "file:.."
+    "tipple": "file:.."
   },
   "scripts": {
     "start": "react-scripts start",

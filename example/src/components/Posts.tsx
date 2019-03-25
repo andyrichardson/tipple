@@ -1,9 +1,9 @@
 import React, { FC, useMemo } from 'react';
-import { useFetch, FetchState } from 'takearest';
+import { useFetch, FetchState } from 'tipple';
 import { Post } from './Post';
 
 export const Posts: FC = () => {
-  const [posts, refetch] = useFetch<PostData[]>('/posts', {
+  const [posts, refetch] = useFetch<PostData[], DataDomain>('/posts', {
     domains: ['posts'],
   });
 

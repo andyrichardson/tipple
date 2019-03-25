@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
-import { useFetch } from 'takearest';
+import { useFetch } from 'tipple';
 import { Card } from './Card';
 
 export const AddPost = () => {

@@ -10,7 +10,7 @@ interface ContextConfig {
   baseUrl?: string;
 }
 
-export interface Context<D extends string = string> {
+export interface TippleContext<D extends string = string> {
   config: ContextConfig;
   domains: Record<D, string[]>;
   responses: Record<string, any>;
@@ -18,4 +18,4 @@ export interface Context<D extends string = string> {
   clearDomains: (domain: D[]) => void;
 }
 
-export const TakeAContext = createContext<Context>(null as any);
+export const Context = createContext<TippleContext>(null as any);

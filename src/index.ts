@@ -1,3 +1,3 @@
-export * from './context';
-export * from './RestProvider';
-export * from './useFetch';
+export { Context as TippleContext } from './context';
+export { Provider as TippleProvider } from './Provider';
+export { useFetch, FetchState } from './useFetch';

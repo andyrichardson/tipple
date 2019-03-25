@@ -1,5 +1,5 @@
 import React, { FC, useState, useMemo } from 'react';
-import { Context, TakeAContext } from './context';
+import { Context, TippleContext } from './context';
 
 type DomainMap = Record<string, string[]>;
 type ResponseMap = Record<string, any>;
@@ -8,7 +8,7 @@ interface ProviderProps {
   baseUrl?: string;
 }
 
-export const TakeAProvider: FC<ProviderProps> = ({ baseUrl, children }) => {
+export const Provider: FC<ProviderProps> = ({ baseUrl, children }) => {
   const [domains, setDomains] = useState<DomainMap>({});
   const [responses, setResponses] = useState<ResponseMap>({});
 
@@ -24,11 +24,11 @@ export const TakeAProvider: FC<ProviderProps> = ({ baseUrl, children }) => {
   const config = { baseUrl };
 
   return (
-    <TakeAContext.Provider
+    <Context.Provider
       value={{ config, domains, responses, addResponse, clearDomains }}
     >
       {children}
-    </TakeAContext.Provider>
+    </Context.Provider>
   );
 };
 
@@ -37,7 +37,7 @@ const createAddResponse = (
   responses: Record<string, any>,
   setDomains: (arg: Record<string, string[]>) => void,
   setResponses: (arg: Record<string, any>) => void
-): Context['addResponse'] => ({ key, domains: domainArr, data }) => {
+): TippleContext['addResponse'] => ({ key, domains: domainArr, data }) => {
   const updatedDomains = domainArr.reduce(
     (p, d) => ({ ...p, [d]: p[d] === undefined ? [key] : [...p[d], key] }),
     domains
@@ -51,7 +51,7 @@ const createClearDomains = (
   domains: Record<string, string[]>,
   responses: Record<string, any>,
   setResponses: (arg: Record<string, any>) => void
-): Context['clearDomains'] => targetDomains =>
+): TippleContext['clearDomains'] => targetDomains =>
   targetDomains.forEach(domain => {
     if (domains[domain] === undefined) {
       return;

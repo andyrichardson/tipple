@@ -11,3 +11,5 @@ interface CommentData {
   body: string;
   postId: number;
 }
+
+type DataDomain = 'posts' | 'comments' | 'users';

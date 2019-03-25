@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 import React, { FC, useMemo } from 'react';
 import { Card } from './Card';
-import { useFetch, FetchState } from 'takearest';
+import { useFetch, FetchState } from 'tipple';
 
 export const Post: FC<{ post: PostData }> = ({ post }) => {
-  const [comments] = useFetch<CommentData[]>(`/comments/?postId=${post.id}`, {
-    domains: ['comments'],
-  });
+  const [comments] = useFetch<CommentData[], DataDomain>(
+    `/comments/?postId=${post.id}`,
+    { domains: ['comments'] }
+  );
 
   const commentsContent = useMemo(() => getComments(comments), [comments]);
 

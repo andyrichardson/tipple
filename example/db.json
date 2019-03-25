@@ -2,19 +2,19 @@
   "posts": [
     {
       "id": 1,
-      "title": "Unpopular opinion - ",
+      "title": "Tipple is the best!",
       "author": "Ken"
     }
   ],
   "comments": [
     {
       "id": 1,
-      "body": "I agree.",
+      "body": "I was thinking the same thing!",
       "postId": 1
     }
   ],
   "user": {
     "id": 1,
-    "name": "Paul"
+    "name": "Tipple User"
   }
 }

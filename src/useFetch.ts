@@ -1,5 +1,5 @@
 import { useContext, useCallback, useState, useEffect, useMemo } from 'react';
-import { TakeAContext, Context } from './context';
+import { Context } from './context';
 
 export interface FetchState<T = any> {
   fetching: boolean;
@@ -7,21 +7,19 @@ export interface FetchState<T = any> {
   error?: Error;
 }
 
-interface UseFetchOptions {
-  domains: string[];
+interface UseFetchOptions<D extends string> {
+  domains: D[];
   onMount?: boolean;
 }
 
 type UseFetchResponse<T = any> = [FetchState<T>, () => void];
 
-export const useFetch = <T>(
+export const useFetch = <T = any, D extends string = string>(
   url: string,
-  opts: UseFetchOptions,
+  opts: UseFetchOptions<D>,
   fetchArgs: RequestInit = {}
 ): UseFetchResponse<T> => {
-  const { config, responses, addResponse, clearDomains } = useContext(
-    TakeAContext
-  );
+  const { config, responses, addResponse, clearDomains } = useContext(Context);
   const [state, setState] = useState<FetchState<T>>({ fetching: true });
 
   /** Unique identifier of request. */
