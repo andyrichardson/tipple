@@ -1,0 +1,21 @@
+@import '~antd/dist/antd.css';
+
+body {
+  background: #fafbfc;
+  font-family: 'Open Sans' sans-serif;
+}
+
+#root {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.ant-card {
+  margin: 20px 0;
+}
+
+#root > * {
+  width: 600px;
+}

@@ -1,5 +1,6 @@
-import React, { FC, useMemo } from 'react';
-import { useFetch, FetchState } from 'tipple';
+import { Spin, Button } from 'antd';
+import React, { FC } from 'react';
+import { useFetch } from 'tipple';
 import { Post } from './Post';
 
 export const Posts: FC = () => {
@@ -7,27 +8,24 @@ export const Posts: FC = () => {
     domains: ['posts'],
   });
 
-  const content = useMemo(() => getContent(posts), [posts]);
-
-  return (
-    <>
-      {content}
-      <button onClick={refetch}>Refetch</button>
-    </>
-  );
-};
-
-const getContent = (posts: FetchState<PostData[]>) => {
-  // First fetch
   if (posts.fetching || posts.data === undefined) {
-    return <div>Fetching</div>;
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <Spin size="large" />
+      </div>
+    );
   }
 
-  // Error
   if (posts.error !== undefined) {
     return <div>Error!</div>;
   }
 
-  // Has data (may also be fetching in background)
-  return posts.data.map(post => <Post key={post.id} post={post} />);
+  return (
+    <>
+      {posts.data.map(post => (
+        <Post key={post.id} post={post} />
+      ))}
+      <Button>Refetch</Button>
+    </>
+  );
 };

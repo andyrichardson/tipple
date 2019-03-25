@@ -8,6 +8,7 @@ interface AddResponseArgs<D extends string = string> {
 
 interface ContextConfig {
   baseUrl?: string;
+  headers?: RequestInit['headers'];
 }
 
 export interface TippleContext<D extends string = string> {

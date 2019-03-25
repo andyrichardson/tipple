@@ -1,6 +1,5 @@
-import styled from 'styled-components';
+import { Card, Comment, Spin, Row } from 'antd';
 import React, { FC, useMemo } from 'react';
-import { Card } from './Card';
 import { useFetch, FetchState } from 'tipple';
 
 export const Post: FC<{ post: PostData }> = ({ post }) => {
@@ -12,37 +11,31 @@ export const Post: FC<{ post: PostData }> = ({ post }) => {
   const commentsContent = useMemo(() => getComments(comments), [comments]);
 
   return (
-    <Card>
-      <Title>{post.title}</Title>
-      <Author>{post.author}</Author>
-      {commentsContent}
-    </Card>
+    <Row>
+      <Card>
+        <h2>{post.title}</h2>
+        {commentsContent}
+      </Card>
+    </Row>
   );
 };
 
 const getComments = (comments: FetchState<CommentData[]>) => {
   if (comments.fetching && comments.data === undefined) {
-    return <p>Fetching comments</p>;
+    return <Spin />;
   }
 
   if (comments.error || comments.data === undefined) {
     return <p>Unable to fetch comments</p>;
   }
 
-  if (comments.data.length === 0) {
-    return <p>No comments.</p>;
-  }
-
-  return comments.data.map(comment => (
-    <Comment key={comment.id}>{comment.body}</Comment>
-  ));
+  return (
+    <>
+      <div className="ant-list-header">{comments.data.length} replies</div>
+      <hr />
+      {comments.data.map(comment => (
+        <Comment content={comment.body} />
+      ))}
+    </>
+  );
 };
-
-const Title = styled.h3``;
-
-const Author = styled.p``;
-
-const Comment = styled.p`
-  border: solid 1px #eee;
-  padding: 10px;
-`;

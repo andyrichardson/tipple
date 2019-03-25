@@ -6,9 +6,10 @@ type ResponseMap = Record<string, any>;
 
 interface ProviderProps {
   baseUrl?: string;
+  headers?: RequestInit['headers'];
 }
 
-export const Provider: FC<ProviderProps> = ({ baseUrl, children }) => {
+export const Provider: FC<ProviderProps> = ({ baseUrl, headers, children }) => {
   const [domains, setDomains] = useState<DomainMap>({});
   const [responses, setResponses] = useState<ResponseMap>({});
 
@@ -21,7 +22,7 @@ export const Provider: FC<ProviderProps> = ({ baseUrl, children }) => {
     [domains, responses]
   );
 
-  const config = { baseUrl };
+  const config = { baseUrl, headers };
 
   return (
     <Context.Provider

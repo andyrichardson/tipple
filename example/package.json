@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "antd": "^3.15.2",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
-    "styled-components": "^4.2.0",
     "tipple": "file:.."
   },
   "scripts": {

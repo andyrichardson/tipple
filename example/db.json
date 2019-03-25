@@ -4,12 +4,22 @@
       "id": 1,
       "title": "Tipple is the best!",
       "author": "Ken"
+    },
+    {
+      "id": 2,
+      "title": "Unpopular opinion - Tipple edition.",
+      "author": "Ken"
     }
   ],
   "comments": [
     {
       "id": 1,
       "body": "I was thinking the same thing!",
+      "postId": 1
+    },
+    {
+      "id": 2,
+      "body": "Me too.",
       "postId": 1
     }
   ],

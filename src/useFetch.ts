@@ -38,10 +38,10 @@ export const useFetch = <T = any, D extends string = string>(
     setState({ ...state, fetching: true });
 
     try {
-      const response = await executeRequest(
-        `${config.baseUrl || ''}${url}`,
-        fetchArgs
-      );
+      const response = await executeRequest(`${config.baseUrl || ''}${url}`, {
+        ...fetchArgs,
+        headers: { ...config.headers, ...fetchArgs.headers },
+      });
 
       if (isMutationType) {
         clearDomains(opts.domains);
