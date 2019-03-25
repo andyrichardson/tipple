@@ -6,7 +6,7 @@ import { Card } from './Card';
 export const AddPost = () => {
   const [body, setBody] = useState<any>({ author: 'rested user', title: '' });
   const [response, addPost] = useFetch(
-    'http://localhost:5000/posts',
+    '/posts',
     { domains: ['posts'] },
     { method: 'POST', body: JSON.stringify(body) }
   );

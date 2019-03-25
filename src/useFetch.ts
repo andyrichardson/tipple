@@ -19,23 +19,31 @@ export const useFetch = <T>(
   opts: UseFetchOptions,
   fetchArgs: RequestInit = {}
 ): UseFetchResponse<T> => {
-  const { responses, addResponse, clearDomains } = useContext(TakeAContext);
+  const { config, responses, addResponse, clearDomains } = useContext(
+    TakeAContext
+  );
   const [state, setState] = useState<FetchState<T>>({ fetching: true });
 
+  /** Unique identifier of request. */
   const key = useMemo(() => getKey(url, fetchArgs), [url, fetchArgs]);
+  /** POST, DELETE, etc. (not GET) */
   const isMutationType = useMemo(() => isMutation(fetchArgs), [fetchArgs]);
+  /** Data parsed from cache/request. */
   const data = useMemo(() => (isMutationType ? state.data : responses[key]), [
     responses,
     key,
     isMutationType,
   ]);
 
-  // Executor
+  /** Executes fetching of data. */
   const doFetch = useCallback(async () => {
     setState({ ...state, fetching: true });
 
     try {
-      const response = await executeRequest(url, fetchArgs);
+      const response = await executeRequest(
+        `${config.baseUrl || ''}${url}`,
+        fetchArgs
+      );
 
       if (isMutationType) {
         clearDomains(opts.domains);
@@ -49,19 +57,19 @@ export const useFetch = <T>(
     }
   }, [state, isMutationType, opts.domains, addResponse]);
 
+  /** On mount */
   useEffect(() => {
-    console.log('Callll');
     if (!isMutationType) {
-      console.log('FETCH');
       doFetch();
     }
   }, []);
 
+  /** On data change */
   useEffect(() => {
     if (!state.fetching && !isMutationType && data === undefined) {
       doFetch();
     }
-  }, [JSON.stringify(data), state.fetching]);
+  }, [JSON.stringify(data), state.fetching, isMutationType]);
 
   return [{ ...state, data }, doFetch];
 };

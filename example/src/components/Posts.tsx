@@ -3,7 +3,7 @@ import { useFetch, FetchState } from 'takearest';
 import { Post } from './Post';
 
 export const Posts: FC = () => {
-  const [posts, refetch] = useFetch<PostData[]>('http://localhost:5000/posts', {
+  const [posts, refetch] = useFetch<PostData[]>('/posts', {
     domains: ['posts'],
   });
 

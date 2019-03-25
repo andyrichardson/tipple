@@ -4,10 +4,9 @@ import { Card } from './Card';
 import { useFetch, FetchState } from 'takearest';
 
 export const Post: FC<{ post: PostData }> = ({ post }) => {
-  const [comments] = useFetch<CommentData[]>(
-    `http://localhost:5000/comments/?postId=${post.id}`,
-    { domains: ['comments'] }
-  );
+  const [comments] = useFetch<CommentData[]>(`/comments/?postId=${post.id}`, {
+    domains: ['comments'],
+  });
 
   const commentsContent = useMemo(() => getComments(comments), [comments]);
 

@@ -4,7 +4,11 @@ import { Context, TakeAContext } from './context';
 type DomainMap = Record<string, string[]>;
 type ResponseMap = Record<string, any>;
 
-export const TakeAProvider: FC<any> = ({ children }) => {
+interface ProviderProps {
+  baseUrl?: string;
+}
+
+export const TakeAProvider: FC<ProviderProps> = ({ baseUrl, children }) => {
   const [domains, setDomains] = useState<DomainMap>({});
   const [responses, setResponses] = useState<ResponseMap>({});
 
@@ -17,9 +21,11 @@ export const TakeAProvider: FC<any> = ({ children }) => {
     [domains, responses]
   );
 
+  const config = { baseUrl };
+
   return (
     <TakeAContext.Provider
-      value={{ domains, responses, addResponse, clearDomains }}
+      value={{ config, domains, responses, addResponse, clearDomains }}
     >
       {children}
     </TakeAContext.Provider>
@@ -32,7 +38,6 @@ const createAddResponse = (
   setDomains: (arg: Record<string, string[]>) => void,
   setResponses: (arg: Record<string, any>) => void
 ): Context['addResponse'] => ({ key, domains: domainArr, data }) => {
-  console.log('adding response: ', key);
   const updatedDomains = domainArr.reduce(
     (p, d) => ({ ...p, [d]: p[d] === undefined ? [key] : [...p[d], key] }),
     domains

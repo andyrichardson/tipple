@@ -5,7 +5,7 @@ import { AddPost } from './components/AddPost';
 
 export const App: FC = () => {
   return (
-    <TakeAProvider>
+    <TakeAProvider baseUrl={'http://localhost:5000'}>
       <AddPost />
       <Posts />
     </TakeAProvider>

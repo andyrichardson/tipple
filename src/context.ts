@@ -6,7 +6,12 @@ interface AddResponseArgs<D extends string = string> {
   data: any;
 }
 
+interface ContextConfig {
+  baseUrl?: string;
+}
+
 export interface Context<D extends string = string> {
+  config: ContextConfig;
   domains: Record<D, string[]>;
   responses: Record<string, any>;
   addResponse: (args: AddResponseArgs<D>) => void;
