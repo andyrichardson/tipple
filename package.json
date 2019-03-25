@@ -1,0 +1,29 @@
+{
+  "name": "takearest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andyrichardson/tiny-rest.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andyrichardson/tiny-rest/issues"
+  },
+  "homepage": "https://github.com/andyrichardson/tiny-rest#readme",
+  "devDependencies": {
+    "@types/react": "^16.8.8",
+    "eslint": "^5.15.3",
+    "prettier": "^1.16.4",
+    "react": "^16.8.5",
+    "typescript": "^3.3.4000"
+  },
+  "peerDependencies": {
+    "react": "~16.8.0"
+  }
+}

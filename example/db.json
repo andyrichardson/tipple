@@ -1,0 +1,26 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "Unpopular opinion - ",
+      "author": "Ken"
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "I agree.",
+      "postId": 1
+    }
+  ],
+  "user": {
+    "id": 1,
+    "name": "Paul"
+  }
+}
