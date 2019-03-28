@@ -1,4 +1,4 @@
-import React, { FC, useState, useMemo, ContextType, Context } from 'react';
+import { FC, useState, useMemo } from 'react';
 import { TippleContext } from './context';
 
 type DomainMap = Record<string, string[]>;

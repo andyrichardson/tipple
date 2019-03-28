@@ -1,4 +1,4 @@
-import React, { useContext, FC } from 'react';
+import { useContext, FC } from 'react';
 import renderer, { act } from 'react-test-renderer';
 import { TippleContext } from './context';
 import { createAddResponse, createClearDomains, Provider } from './Provider';
