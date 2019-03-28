@@ -1,5 +1,12 @@
+workflow:  
+  - install
+  - sail:parallel:
+    - lint
+    - test
+  - build
+
 tasks:
-  build:
+  install: &base
     image: node:11
     command:
       - npm
@@ -7,16 +14,18 @@ tasks:
       - i
       - --ci
   lint:
-    image: node:11
-    command:
-      - npm 
+    <<: *base
     args:
       - run
       - lint
   test:
-    image: node:11
-    command:
-      - npm
+    <<: *base
     args:
       - run
       - test
+
+  build:
+    <<: *base
+    args:
+      - run
+      - build
