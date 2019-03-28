@@ -1,0 +1,22 @@
+tasks:
+  build:
+    image: node:11
+    command:
+      - npm
+    args:
+      - i
+      - --ci
+  lint:
+    image: node:11
+    command:
+      - npm 
+    args:
+      - run
+      - lint
+  test:
+    image: node:11
+    command:
+      - npm
+    args:
+      - run
+      - test
