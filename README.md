@@ -21,7 +21,7 @@ There's two key parts to Tipple:
 
 I'm sure you've done this before
 
-```
+```sh
 npm i tipple
 ```
 
@@ -29,7 +29,7 @@ npm i tipple
 
 Tipple uses React's context to store the responses and integrity states of requests. You'll want to put the provider in the root of your project.
 
-```
+```tsx
 import { TippleProvider } from 'tipple';
 import { AppContent } from './AppContent';
 
@@ -44,7 +44,7 @@ export const App = () => (
 
 The _useFetch_ hook will fetch the data you need on mount
 
-```
+```tsx
 import { useFetch } from 'tipple';
 
 interface User {
