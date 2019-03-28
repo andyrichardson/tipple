@@ -1,6 +1,11 @@
 import { useContext, useCallback, useState, useEffect, useMemo } from 'react';
 import { TippleContext } from './context';
 
+export type TypedUseFetch<D extends string> = <T extends any>(
+  url: string,
+  opts: UseFetchOptions<D>
+) => UseFetchResponse<T>;
+
 export interface FetchState<T = any> {
   fetching: boolean;
   data?: T;
