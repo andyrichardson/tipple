@@ -1,14 +1,21 @@
-import React, { FC, useState, useMemo } from 'react';
-import { Context, TippleContext } from './context';
+import React, { FC, useState, useMemo, ContextType, Context } from 'react';
+import { TippleContext } from './context';
 
 type DomainMap = Record<string, string[]>;
 type ResponseMap = Record<string, any>;
 
+/**
+ * Tipple provider props.
+ *
+ * @param baseUrl - Url to prefix all requests (e.g. "https://mydomain.com/api").
+ * @param headers - HTTP headers to append to all requests.
+ */
 interface ProviderProps {
   baseUrl?: string;
   headers?: RequestInit['headers'];
 }
 
+/** Provider for using tipple. */
 export const Provider: FC<ProviderProps> = ({ baseUrl, headers, children }) => {
   const [domains, setDomains] = useState<DomainMap>({});
   const [responses, setResponses] = useState<ResponseMap>({});
@@ -25,15 +32,16 @@ export const Provider: FC<ProviderProps> = ({ baseUrl, headers, children }) => {
   const config = { baseUrl, headers };
 
   return (
-    <Context.Provider
+    <TippleContext.Provider
       value={{ config, domains, responses, addResponse, clearDomains }}
     >
       {children}
-    </Context.Provider>
+    </TippleContext.Provider>
   );
 };
 
-const createAddResponse = (
+/** Logic for adding a response. */
+export const createAddResponse = (
   domains: Record<string, string[]>,
   responses: Record<string, any>,
   setDomains: (arg: Record<string, string[]>) => void,
@@ -48,7 +56,8 @@ const createAddResponse = (
   setResponses({ ...responses, [key]: data });
 };
 
-const createClearDomains = (
+/** Logic for clearing domains. */
+export const createClearDomains = (
   domains: Record<string, string[]>,
   responses: Record<string, any>,
   setResponses: (arg: Record<string, any>) => void

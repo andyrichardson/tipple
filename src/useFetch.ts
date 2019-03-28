@@ -1,5 +1,5 @@
 import { useContext, useCallback, useState, useEffect, useMemo } from 'react';
-import { Context } from './context';
+import { TippleContext } from './context';
 
 export interface FetchState<T = any> {
   fetching: boolean;
@@ -10,22 +10,29 @@ export interface FetchState<T = any> {
 interface UseFetchOptions<D extends string> {
   domains: D[];
   onMount?: boolean;
+  fetchOptions?: RequestInit;
 }
 
 type UseFetchResponse<T = any> = [FetchState<T>, () => void];
 
 export const useFetch = <T = any, D extends string = string>(
   url: string,
-  opts: UseFetchOptions<D>,
-  fetchArgs: RequestInit = {}
+  opts: UseFetchOptions<D>
 ): UseFetchResponse<T> => {
-  const { config, responses, addResponse, clearDomains } = useContext(Context);
+  const { config, responses, addResponse, clearDomains } = useContext(
+    TippleContext
+  );
   const [state, setState] = useState<FetchState<T>>({ fetching: true });
 
   /** Unique identifier of request. */
-  const key = useMemo(() => getKey(url, fetchArgs), [url, fetchArgs]);
+  const key = useMemo(() => getKey(url, opts.fetchOptions || {}), [
+    url,
+    opts.fetchOptions,
+  ]);
   /** POST, DELETE, etc. (not GET) */
-  const isMutationType = useMemo(() => isMutation(fetchArgs), [fetchArgs]);
+  const isMutationType = useMemo(() => isMutation(opts.fetchOptions || {}), [
+    opts.fetchOptions,
+  ]);
   /** Data parsed from cache/request. */
   const data = useMemo(() => (isMutationType ? state.data : responses[key]), [
     responses,
@@ -39,8 +46,8 @@ export const useFetch = <T = any, D extends string = string>(
 
     try {
       const response = await executeRequest(`${config.baseUrl || ''}${url}`, {
-        ...fetchArgs,
-        headers: { ...config.headers, ...fetchArgs.headers },
+        ...opts.fetchOptions,
+        headers: { ...config.headers, ...(opts.fetchOptions || {}).headers },
       });
 
       if (isMutationType) {

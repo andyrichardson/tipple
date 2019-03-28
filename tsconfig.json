@@ -9,5 +9,5 @@
     "declaration": true,
     "outDir": "dist"
   },
-  "include": ["src/"]
+  "files": ["src/index"]
 }

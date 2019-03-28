@@ -5,11 +5,10 @@ import { useFetch } from 'tipple';
 
 export const AddPost = () => {
   const [body, setBody] = useState<any>({ author: 'user', title: '' });
-  const [response, addPost] = useFetch(
-    '/posts',
-    { domains: ['posts'] },
-    { method: 'POST', body: JSON.stringify(body) }
-  );
+  const [response, addPost] = useFetch('/posts', {
+    domains: ['posts'],
+    fetchOptions: { method: 'POST', body: JSON.stringify(body) },
+  });
 
   const handleInput = useCallback(
     (e: any) => setBody({ ...body, title: e.target.value }),

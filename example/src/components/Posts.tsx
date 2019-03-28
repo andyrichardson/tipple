@@ -25,7 +25,7 @@ export const Posts: FC = () => {
       {posts.data.map(post => (
         <Post key={post.id} post={post} />
       ))}
-      <Button>Refetch</Button>
+      <Button onClick={refetch}>Refetch</Button>
     </>
   );
 };

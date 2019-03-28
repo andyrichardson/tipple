@@ -1,12 +1,12 @@
 import { createContext } from 'react';
 
-interface AddResponseArgs<D extends string = string> {
+export interface AddResponseArgs<D extends string = string> {
   key: string;
   domains: D[];
   data: any;
 }
 
-interface ContextConfig {
+export interface ContextConfig {
   baseUrl?: string;
   headers?: RequestInit['headers'];
 }
@@ -19,4 +19,4 @@ export interface TippleContext<D extends string = string> {
   clearDomains: (domain: D[]) => void;
 }
 
-export const Context = createContext<TippleContext>(null as any);
+export const TippleContext = createContext<TippleContext>(null as any);
