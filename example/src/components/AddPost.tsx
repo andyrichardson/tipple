@@ -1,19 +1,24 @@
 import { Card, Button, Input, Row, Col } from 'antd';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { usePush } from 'tipple';
 
 export const AddPost = () => {
+  const timingOut = useRef(false);
   const [body, setBody] = useState<any>({ author: 'user', title: '' });
-  const [response, addPost] = usePush('/posts', {
+  const [response, addPost, clearResponse] = usePush('/posts', {
     domains: ['posts'],
     fetchOptions: { method: 'POST', body: JSON.stringify(body) },
   });
 
-  console.log(response);
   const handleInput = useCallback(
     (e: any) => setBody({ ...body, title: e.target.value }),
     [body]
   );
+
+  if (response.data !== undefined) {
+    clearResponse();
+    setBody({ author: 'user', title: '' });
+  }
 
   return (
     <Row>
