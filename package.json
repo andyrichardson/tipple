@@ -1,7 +1,7 @@
 {
   "name": "tipple",
   "version": "0.1.2",
-  "description": "",
+  "description": "A lightweight dependency-free library for fetching data over REST in React.",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -12,7 +12,7 @@
     "type": "git",
     "url": "git+https://github.com/andyrichardson/tiny-rest.git"
   },
-  "author": "",
+  "author": "Andy Richardson (andyrichardson)",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/andyrichardson/tiny-rest/issues"

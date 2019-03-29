@@ -1,4 +1,4 @@
-<img alt="Tipple logo" src="https://github.com/andyrichardson/tipple/blob/master/docs/assets/logo.png" width="250px" />
+<img alt="Tipple logo" src="https://github.com/andyrichardson/tipple/blob/master/docs/assets/logo.png?raw=true" width="250px" />
 
 A lightweight dependency-free, library for fetching data over REST in React.
 
@@ -57,19 +57,21 @@ const MyComponent = () => {
   const { fetching, error, data } = state;
 
   if (fetching && data === undefined) {
-    return <p>Fetching</p>
+    return <p>Fetching</p>;
   }
 
   if (error || data === undefined) {
-    return <p>Something went wrong</p>
+    return <p>Something went wrong</p>;
   }
 
   return (
     <>
-      {data.map(user => <h2 key={user.id}>{user.name}</h2>)}
+      {data.map(user => (
+        <h2 key={user.id}>{user.name}</h2>
+      ))}
       <button onClick={refetch}>Refetch</button>
     </>
-  )
+  );
 };
 ```
 
