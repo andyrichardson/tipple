@@ -17,7 +17,7 @@ const [response, refetch] = useFetch('/posts/1/comments', {
 If a user is to add a new comment to a post, we would want this to be reflected in our UI. By specifying the domain in both our fetch (above) and push (below) calls, we can be sure that all requests dependent on the "comments" domain will be refetched following a push.
 
 ```tsx
-const [response, addComment] = useFetch('/posts/1/comments', {
+const [response, addComment] = usePush('/posts/1/comments', {
   domains: ['comments'],
   fetchOptions: { method: 'POST' },
 });
@@ -44,15 +44,16 @@ const [response, refetch] = useFetch<ResponseType, ValidDomain>('/comments', {
 });
 ```
 
-To force domain type safety throughout your application, you can proxy the _useFetch_ hook.
+To force domain type safety throughout your application, you can proxy the _useFetch_ and _usePush_ hooks.
 
 ```tsx
 // src/utils.ts
-import { useFetch as useFetchOriginal, TypedUseFetch } from 'tipple';
+import { useFetch as useFetchOriginal, usePush as usePushOriginal TypedUseFetch, TypedUsePush } from 'tipple';
 
 type Domain = 'posts' | 'comments' | 'users';
 
 export const useFetch = useFetchOriginal as TypedUseFetch<Domain>;
+export const usePush = usePushOriginal as TypedUsePush<Domain>;
 
 // src/components/Home.tsx
 import { useFetch } from '../utils';
