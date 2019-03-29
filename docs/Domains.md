@@ -14,7 +14,7 @@ const [response, refetch] = useFetch('/posts/1/comments', {
 });
 ```
 
-If a user is to add a new comment to a post, we would want this to be reflected in our UI. By specifying the domain in both our retrieval (above) and mutation (below) calls, we can be sure that all requests dependent on the "comments" domain will be refetched following a mutation.
+If a user is to add a new comment to a post, we would want this to be reflected in our UI. By specifying the domain in both our fetch (above) and push (below) calls, we can be sure that all requests dependent on the "comments" domain will be refetched following a push.
 
 ```tsx
 const [response, addComment] = useFetch('/posts/1/comments', {
@@ -24,7 +24,7 @@ const [response, addComment] = useFetch('/posts/1/comments', {
 addComment(); // This will cause the request in the first example to be refetched
 ```
 
-> Note: A 'mutatation' refers to any request where data in the target domain is being changed (in other words, anything which is not a GET request).
+> Note: A 'push' refers to any request where data in the target domain is being changed (in other words, anything which is not a GET request).
 
 ### Type safe domains
 
@@ -48,13 +48,13 @@ To force domain type safety throughout your application, you can proxy the _useF
 
 ```tsx
 // src/utils.ts
-import { useFetch as useFetchOriginal, TippleTypedFetch } from 'tipple';
+import { useFetch as useFetchOriginal, TypedUseFetch } from 'tipple';
 
 type Domain = 'posts' | 'comments' | 'users';
 
 export const useFetch = useFetchOriginal as TypedUseFetch<Domain>;
 
-// src/components/Home.ts
+// src/components/Home.tsx
 import { useFetch } from '../utils';
 
 //..

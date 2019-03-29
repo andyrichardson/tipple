@@ -9,10 +9,7 @@
     "tipple": "file:.."
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "concurrently \"webpack-dev-server\" \"json-server db.json --port 5000\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -28,6 +25,7 @@
     "@types/react-dom": "^16.8.3",
     "@types/styled-components": "^4.1.12",
     "awesome-typescript-loader": "^5.2.1",
+    "concurrently": "^4.1.0",
     "css-loader": "^2.1.1",
     "html-webpack-plugin": "^3.2.0",
     "json-server": "^0.14.2",

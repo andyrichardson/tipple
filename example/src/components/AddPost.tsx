@@ -1,15 +1,15 @@
 import { Card, Button, Input, Row, Col } from 'antd';
 import React, { useState, useCallback } from 'react';
-import { useFetch } from 'tipple';
-// import { Card } from './Card';
+import { usePush } from 'tipple';
 
 export const AddPost = () => {
   const [body, setBody] = useState<any>({ author: 'user', title: '' });
-  const [response, addPost] = useFetch('/posts', {
+  const [response, addPost] = usePush('/posts', {
     domains: ['posts'],
     fetchOptions: { method: 'POST', body: JSON.stringify(body) },
   });
 
+  console.log(response);
   const handleInput = useCallback(
     (e: any) => setBody({ ...body, title: e.target.value }),
     [body]
@@ -27,6 +27,8 @@ export const AddPost = () => {
             />
           </Col>
           <Col span={5}>
+            {/* 
+            // @ts-ignore */}
             <Button type="primary" onClick={addPost}>
               Add post
             </Button>

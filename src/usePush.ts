@@ -1,0 +1,51 @@
+import { useContext, useCallback, useState } from 'react';
+import { TippleContext } from './context';
+import { executeRequest } from './util';
+
+export type TypedUsePush<D extends string> = <T extends any>(
+  url: string,
+  opts: UsePushOptions<D>
+) => UsePushResponse<T>;
+
+export interface PushState<T = any> {
+  fetching: boolean;
+  data?: T;
+  error?: Error;
+}
+
+interface UsePushOptions<D extends string> {
+  domains: D[];
+  onMount?: boolean;
+  fetchOptions?: RequestInit;
+}
+
+type UsePushResponse<T = any> = [PushState<T>, () => void, () => void];
+
+export const usePush = <T = any, D extends string = string>(
+  url: string,
+  opts: UsePushOptions<D>
+): UsePushResponse<T> => {
+  const { config, clearDomains } = useContext(TippleContext);
+  const [state, setState] = useState<PushState<T>>({ fetching: true });
+
+  /** Executes fetching of data. */
+  const doFetch = useCallback(async () => {
+    setState({ ...state, fetching: true });
+
+    try {
+      const response = await executeRequest(`${config.baseUrl || ''}${url}`, {
+        ...opts.fetchOptions,
+        headers: { ...config.headers, ...(opts.fetchOptions || {}).headers },
+      });
+
+      clearDomains(opts.domains);
+      setState({ fetching: false, data: response });
+    } catch (error) {
+      setState({ ...state, error });
+    }
+  }, [state, opts.domains]);
+
+  const reset = useCallback(() => setState({ fetching: false }), []);
+
+  return [{ ...state }, doFetch, reset];
+};

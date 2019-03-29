@@ -1,5 +1,6 @@
 import { useContext, useCallback, useState, useEffect, useMemo } from 'react';
 import { TippleContext } from './context';
+import { executeRequest, getKey } from './util';
 
 export type TypedUseFetch<D extends string> = <T extends any>(
   url: string,
@@ -34,16 +35,9 @@ export const useFetch = <T = any, D extends string = string>(
     url,
     opts.fetchOptions,
   ]);
-  /** POST, DELETE, etc. (not GET) */
-  const isMutationType = useMemo(() => isMutation(opts.fetchOptions || {}), [
-    opts.fetchOptions,
-  ]);
+
   /** Data parsed from cache/request. */
-  const data = useMemo(() => (isMutationType ? state.data : responses[key]), [
-    responses,
-    key,
-    isMutationType,
-  ]);
+  const data = useMemo(() => responses[key], [responses, key]);
 
   /** Executes fetching of data. */
   const doFetch = useCallback(async () => {
@@ -55,51 +49,24 @@ export const useFetch = <T = any, D extends string = string>(
         headers: { ...config.headers, ...(opts.fetchOptions || {}).headers },
       });
 
-      if (isMutationType) {
-        clearDomains(opts.domains);
-        setState({ fetching: false, data: response });
-      } else {
-        addResponse({ data: response, key, domains: opts.domains });
-        setState({ fetching: false });
-      }
+      addResponse({ data: response, key, domains: opts.domains });
+      setState({ fetching: false });
     } catch (error) {
       setState({ ...state, error });
     }
-  }, [state, isMutationType, opts.domains, addResponse]);
+  }, [state, opts.domains, addResponse]);
 
-  /** On mount */
+  /** On mount. */
   useEffect(() => {
-    if (!isMutationType) {
-      doFetch();
-    }
+    doFetch();
   }, []);
 
-  /** On data change */
+  /** On data change. */
   useEffect(() => {
-    if (!state.fetching && !isMutationType && data === undefined) {
+    if (!state.fetching && data === undefined) {
       doFetch();
     }
-  }, [JSON.stringify(data), state.fetching, isMutationType]);
+  }, [JSON.stringify(data), state.fetching]);
 
   return [{ ...state, data }, doFetch];
 };
-
-const executeRequest = async (url: string, fetchArgs: RequestInit) => {
-  const response = await fetch(url, fetchArgs);
-  const json = await response.json();
-
-  if (!response.ok) {
-    throw json;
-  }
-
-  return json;
-};
-
-/** Asserts whether request updates/mutates the domain. */
-const isMutation = (fetchArgs: RequestInit) =>
-  fetchArgs !== undefined &&
-  fetchArgs.method !== undefined &&
-  fetchArgs.method.toUpperCase() !== 'GET';
-
-const getKey = (url: string, fetchArgs: RequestInit) =>
-  `${url}+${fetchArgs.body !== undefined ? fetchArgs.body : ''}`;
