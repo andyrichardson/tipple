@@ -1,4 +1,4 @@
-# Tipple
+<img alt="Tipple logo" src="https://github.com/andyrichardson/tipple/blob/master/docs/assets/logo.png" width="250px" />
 
 A lightweight dependency-free, library for fetching data over REST in React.
 
