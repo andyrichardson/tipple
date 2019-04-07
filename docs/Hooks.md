@@ -40,7 +40,7 @@ Type arguments are optional and can be used to specify the type of data being re
 
 #### URL
 
-The first argument is the route for your request. You'll more than likely have already set your [baseUrl]('./Configuration.md#baseurl') so just specify the route within the API.
+The first argument is the route for your request. You'll more than likely have already set your [baseUrl](./Configuration.md#baseurl) so just specify the route within the API.
 
 #### Additional options
 
