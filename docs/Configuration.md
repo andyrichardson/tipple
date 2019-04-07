@@ -1,6 +1,6 @@
 # Configuration
 
-So, you have a decent understanding of how [Tipple's architecture](./Domains.md) works and you're looking to get started. Just follow the examples below or check out the [example project]('../example').
+So, you have a decent understanding of how [Tipple's architecture](./Domains.md) works and you're looking to get started. Just follow the examples below or check out the [example project]('https://github.com/andyrichardson/tipple/blob/master/example').
 
 ## Setting up the provider
 
