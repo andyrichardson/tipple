@@ -48,6 +48,10 @@ The first argument is the route for your request. You'll more than likely have a
 
 _The domain of the data being retrieved. This is a required array of strings which may need to [comply to a domain type](#type-arguments)._
 
+##### cachePolicy
+
+_The way in which data is retrieved from the cache or network. Options include `cache-first` (default), `network-first`._
+
 ##### fetchOptions (optional)
 
 _The [fetch 'init' argument](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) for the request. This can override globally configured options such as headers._
@@ -89,7 +93,7 @@ import { ErrorCard, Spinner, UserCard } from './components';
 
 export const AddComment: FC = () => {
   const [inputState, setState] = useState('');
-  const [req, execute] = usePush<AddCommentResponse, Domain>(
+  const [req, execute, clear] = usePush<AddCommentResponse, Domain>(
     '/posts/1/comments',
     {
       domains: ['comments'],
@@ -103,10 +107,12 @@ export const AddComment: FC = () => {
 
   if (req.error) {
     alert('Unable to add comment');
+    clear();
   }
 
   if (req.data) {
     alert('Push complete');
+    clear();
   }
 
   return (
@@ -132,7 +138,7 @@ The endpoint URL (as [described for useFetch](#Arguments)).
 
 #### Additional options
 
-At this point in time, all the arguments for `usePush` are identical to that of `useFetch`.
+All the arguments for `usePush` are identical to that of `useFetch` with the exception of `cachePolicy`.
 
 ### Response
 
@@ -145,3 +151,7 @@ See the request definition for [useFetch](#Response).
 #### [..., execute]
 
 This triggers the request.
+
+#### [..., ..., clear]
+
+Clears request object back to its initial state. Triggering this will often be useful following the handling of an error / response data.
