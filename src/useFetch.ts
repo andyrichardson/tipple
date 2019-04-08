@@ -13,8 +13,9 @@ export interface FetchState<T = any> {
   error?: Error;
 }
 
-interface UseFetchOptions<D extends string> {
+interface UseFetchOptions<D extends string = string> {
   domains: D[];
+  cachePolicy?: 'cache-first' | 'network-first';
   onMount?: boolean;
   fetchOptions?: RequestInit;
 }
@@ -37,7 +38,24 @@ export const useFetch = <T = any, D extends string = string>(
   ]);
 
   /** Data parsed from cache/request. */
-  const data = useMemo(() => responses[key], [responses, key]);
+  useMemo(() => {
+    if (
+      responses[key] === undefined ||
+      JSON.stringify(state.data) === JSON.stringify(responses[key])
+    ) {
+      return;
+    }
+
+    // Cache first and data changed
+    if (opts.cachePolicy === 'cache-first' || opts.cachePolicy === undefined) {
+      return setState({ ...state, data: responses[key] });
+    }
+
+    // Network first and data changed
+    if (opts.cachePolicy === 'network-first' && state.data !== undefined) {
+      return setState({ ...state, data: responses[key] });
+    }
+  }, [state, opts.cachePolicy, responses[key]]);
 
   /** Executes fetching of data. */
   const doFetch = useCallback(async () => {
@@ -48,11 +66,13 @@ export const useFetch = <T = any, D extends string = string>(
         ...opts.fetchOptions,
         headers: { ...config.headers, ...(opts.fetchOptions || {}).headers },
       });
-
       addResponse({ data: response, key, domains: opts.domains });
-      setState({ fetching: false });
+      setState({
+        fetching: false,
+        data: opts.cachePolicy === 'network-first' ? response : undefined,
+      });
     } catch (error) {
-      setState({ ...state, error });
+      setState({ ...state, fetching: false, error });
     }
   }, [state, opts.domains, addResponse]);
 
@@ -63,10 +83,21 @@ export const useFetch = <T = any, D extends string = string>(
 
   /** On data change. */
   useEffect(() => {
-    if (!state.fetching && data === undefined) {
+    if (!state.fetching && state.data === undefined) {
       doFetch();
     }
-  }, [JSON.stringify(data), state.fetching]);
+  }, [state.data, state.fetching]);
 
-  return [{ ...state, data }, doFetch];
+  /** On cache invalidation. */
+  useEffect(() => {
+    if (
+      !state.fetching &&
+      state.data !== undefined &&
+      responses[key] === undefined
+    ) {
+      doFetch();
+    }
+  }, [state.data, state.fetching, responses[key]]);
+
+  return [{ ...state }, doFetch];
 };
