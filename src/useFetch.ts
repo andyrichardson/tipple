@@ -26,9 +26,7 @@ export const useFetch = <T = any, D extends string = string>(
   url: string,
   opts: UseFetchOptions<D>
 ): UseFetchResponse<T> => {
-  const { config, responses, addResponse, clearDomains } = useContext(
-    TippleContext
-  );
+  const { config, responses, addResponse } = useContext(TippleContext);
   const [state, setState] = useState<FetchState<T>>({ fetching: true });
 
   /** Unique identifier of request. */
