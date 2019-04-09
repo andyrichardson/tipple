@@ -30,7 +30,7 @@ let opts: Parameters<typeof usePush>[1] = { domains: ['users'] };
 
 // Hook results
 let state: FetchState;
-let doFetch: () => void;
+let doFetch: () => Promise<any>;
 let reset: () => void;
 
 const HookFixture: FC = () => {
@@ -84,14 +84,14 @@ describe('on doFetch', () => {
   });
 
   it('calls executeRequest with url and options', () => {
-    act(() => doFetch());
+    doFetch();
     expect(executeRequest).toBeCalledWith(`${config.baseUrl}${url}`, {
       headers: config.headers,
     });
   });
 
   it('calls clearDomains on response', async () => {
-    act(() => doFetch());
+    doFetch();
     await waitForAsync();
     expect(clearDomains).toBeCalledWith(opts.domains);
   });
@@ -102,17 +102,23 @@ describe('on response', () => {
 
   beforeEach(() => {
     instance = renderer.create(<Fixture />);
-    doFetch();
   });
 
   afterEach(() => instance.unmount());
 
   it('sets data value', async () => {
+    doFetch();
     await waitForAsync();
     expect(state.data).toBe(response);
   });
 
-  it('clears data', () => {
+  it('sets data value', async () => {
+    expect(await doFetch()).toEqual(response);
+  });
+
+  it('clears data', async () => {
+    doFetch();
+    await waitForAsync();
     act(() => reset());
     expect(state.data).toBe(undefined);
   });
@@ -124,14 +130,22 @@ describe('on error', () => {
   beforeEach(async () => {
     (executeRequest as jest.Mock).mockReturnValueOnce(Promise.reject(Error()));
     instance = renderer.create(<Fixture />);
-    act(() => doFetch());
-    await waitForAsync();
   });
 
   afterEach(() => instance.unmount());
 
   it('sets error value', async () => {
+    await doFetch().catch(() => false);
     expect((state.error as any).constructor).toBe(Error);
+  });
+
+  it('throws async error', async () => {
+    try {
+      await doFetch();
+      fail();
+    } catch (err) {
+      expect(err instanceof Error).toBe(true);
+    }
   });
 
   it('does not call clearDomains', () => {
