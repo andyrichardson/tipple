@@ -26,7 +26,7 @@ export const usePush = <T = any, D extends string = string>(
   opts: UsePushOptions<D>
 ): UsePushResponse<T> => {
   const { config, clearDomains } = useContext(TippleContext);
-  const [state, setState] = useState<PushState<T>>({ fetching: true });
+  const [state, setState] = useState<PushState<T>>({ fetching: false });
 
   /** Executes fetching of data. */
   const doFetch = useCallback(async () => {
