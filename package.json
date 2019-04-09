@@ -15,7 +15,8 @@
   "scripts": {
     "build": "tsc",
     "test": "jest",
-    "lint": "eslint src/**/*"
+    "lint": "eslint src/**/*",
+    "prepack": "npm run lint && npm run test && npm run build"
   },
   "repository": {
     "type": "git",
