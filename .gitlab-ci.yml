@@ -1,0 +1,26 @@
+stages:
+  - test
+  - build
+
+.base: &base
+  before_script:
+    - npm i
+  image: node:11
+
+lint:
+  <<: *base
+  stage: test
+  script:
+    - npm run lint
+
+test:
+  <<: *base
+  stage: test
+  script:
+    - npm run test --coverage
+
+build:
+  <<: *base
+  stage: build
+  script:
+    - npm run build
