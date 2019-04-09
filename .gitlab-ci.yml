@@ -4,7 +4,7 @@ stages:
 
 .base: &base
   before_script:
-    - npm i
+    - npm ci
   image: node:11
 
 lint:
@@ -17,7 +17,7 @@ test:
   <<: *base
   stage: test
   script:
-    - npm run test --coverage
+    - npm run test -- --coverage --coverageReporters=text-lcov | npx coveralls
 
 build:
   <<: *base
