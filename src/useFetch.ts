@@ -15,7 +15,7 @@ export interface FetchState<T = any> {
 
 interface UseFetchOptions<D extends string = string> {
   domains: D[];
-  cachePolicy?: 'cache-first' | 'network-first';
+  cachePolicy?: 'cache-first' | 'cache-only' | 'network-first';
   onMount?: boolean;
   fetchOptions?: RequestInit;
 }
@@ -27,7 +27,9 @@ export const useFetch = <T = any, D extends string = string>(
   opts: UseFetchOptions<D>
 ): UseFetchResponse<T> => {
   const { config, responses, addResponse } = useContext(TippleContext);
-  const [state, setState] = useState<FetchState<T>>({ fetching: true });
+  const [state, setState] = useState<FetchState<T>>({
+    fetching: opts.cachePolicy !== 'cache-only',
+  });
 
   /** Unique identifier of request. */
   const key = useMemo(() => getKey(url, opts.fetchOptions || {}), [
@@ -45,7 +47,11 @@ export const useFetch = <T = any, D extends string = string>(
     }
 
     // Cache first and data changed
-    if (opts.cachePolicy === 'cache-first' || opts.cachePolicy === undefined) {
+    if (
+      opts.cachePolicy === 'cache-first' ||
+      opts.cachePolicy === 'cache-only' ||
+      opts.cachePolicy === undefined
+    ) {
       return setState({ ...state, data: responses[key] });
     }
 
@@ -76,12 +82,18 @@ export const useFetch = <T = any, D extends string = string>(
 
   /** On mount. */
   useEffect(() => {
-    doFetch();
+    if (opts.cachePolicy !== 'cache-only') {
+      doFetch();
+    }
   }, []);
 
   /** On data change. */
   useEffect(() => {
-    if (!state.fetching && state.data === undefined) {
+    if (
+      !state.fetching &&
+      state.data === undefined &&
+      opts.cachePolicy !== 'cache-only'
+    ) {
       doFetch();
     }
   }, [state.data, state.fetching]);
@@ -91,7 +103,8 @@ export const useFetch = <T = any, D extends string = string>(
     if (
       !state.fetching &&
       state.data !== undefined &&
-      responses[key] === undefined
+      responses[key] === undefined &&
+      opts.cachePolicy !== 'cache-only'
     ) {
       doFetch();
     }

@@ -46,15 +46,19 @@ The first argument is the route for your request. You'll more than likely have a
 
 ##### domains
 
-_The domain of the data being retrieved. This is a required array of strings which may need to [comply to a domain type](#type-arguments)._
+The domain of the data being retrieved. This is a required array of strings which may need to [comply to a domain type](#type-arguments).
 
 ##### cachePolicy
 
-_The way in which data is retrieved from the cache or network. Options include `cache-first` (default), `network-first`._
+The way in which data is retrieved from the cache or network:
+
+- _cache-first (default)_ - cached data is returned and the fetch request is triggered.
+- _network-first_ - cached data is not returned until the fetch request returns and the cache is updated.
+- _cache-only_ - cached data is returned and no network request is made.
 
 ##### fetchOptions (optional)
 
-_The [fetch 'init' argument](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) for the request. This can override globally configured options such as headers._
+The [fetch 'init' argument](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) for the request. This can override globally configured options such as headers.
 
 ### Response
 
@@ -66,15 +70,15 @@ An object containing metadata about the network request and the resulting respon
 
 ##### fetching
 
-_Whether or not a fetch request is in-flight._
+Whether or not a fetch request is in-flight.
 
 ##### error
 
-_The resulting error in the case where the request has failed._
+The resulting error in the case where the request has failed.
 
 ##### data
 
-_The parsed JSON response from the server assuming the request was successful._
+The parsed JSON response from the server assuming the request was successful.
 
 #### [..., refetch]
 

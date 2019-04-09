@@ -52,6 +52,17 @@ const Fixture: FC = props => (
 const waitForAsync = (delay = 20) =>
   new Promise(resolve => setTimeout(resolve, delay));
 
+beforeEach(() => {
+  config = {
+    baseUrl: 'http://url',
+    headers: { 'content-type': 'application/json' },
+  };
+  responses = { '12345': [1, 2, 3] };
+  domains = {};
+  url = '/users';
+  opts = { domains: ['any'] };
+});
+
 beforeEach(jest.clearAllMocks);
 
 describe('on init', () => {
@@ -159,5 +170,39 @@ describe('on invalidation', () => {
     instance.update(<Fixture />);
     await waitForAsync();
     expect(executeRequest).toBeCalledTimes(2);
+  });
+});
+
+describe('cache-only', () => {
+  let instance: renderer.ReactTestRenderer;
+
+  beforeEach(() => {
+    opts = { domains: ['example'], cachePolicy: 'cache-only' };
+    instance = renderer.create(<Fixture />);
+  });
+
+  afterEach(() => instance.unmount());
+
+  it('defaults to not fetching', () => {
+    expect(state.fetching).toBe(false);
+  });
+
+  it('returns value from cache', () => {
+    expect(state.data).toBe(responses[key]);
+  });
+
+  it('does not call executeRequest on mount', async () => {
+    instance.update(<Fixture />);
+    await waitForAsync();
+    expect(executeRequest).toBeCalledTimes(0);
+  });
+
+  it('does not call executeRequest on data invalidation', async () => {
+    instance.update(<Fixture />);
+    await waitForAsync();
+    responses = {};
+    instance.update(<Fixture />);
+    await waitForAsync();
+    expect(executeRequest).toBeCalledTimes(0);
   });
 });
