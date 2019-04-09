@@ -3,11 +3,11 @@
 A lightweight dependency-free, library for fetching data over REST in React.
 
 <p align="center">
+  <img src="https://img.shields.io/codecov/c/github/andyrichardson/tipple.svg" alt="coverage">
   <img src="https://img.shields.io/github/package-json/v/andyrichardson/tipple.svg" alt="version" />
   <img src="https://img.shields.io/npm/dt/tipple.svg" alt="downloads" />
   <img src="https://img.shields.io/bundlephobia/minzip/tipple.svg" alt="size" />
 </p>
-
 
 ## What is Tipple?
 
