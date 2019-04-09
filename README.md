@@ -93,3 +93,5 @@ const MyComponent = () => {
 ## Further documentation
 
 For more advanced usage, check out [the docs](/docs).
+
+There's also an [example project](https://github.com/andyrichardson/tipple/tree/master/example) if you're into that kind of thing.
