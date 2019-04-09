@@ -1,0 +1,29 @@
+stages:
+  - test
+  - build
+
+.base: &base
+  before_script:
+    - npm ci
+  image: node:11
+
+lint:
+  <<: *base
+  stage: test
+  script:
+    - npm run lint
+
+test:
+  <<: *base
+  stage: test
+  variables:
+    CODECOV_TOKEN: $CODECOV_TOKEN
+  script:
+    - npm run test -- --coverage
+    - npx codecov
+
+build:
+  <<: *base
+  stage: build
+  script:
+    - npm run build
