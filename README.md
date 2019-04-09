@@ -1,12 +1,20 @@
 <img alt="Tipple logo" src="https://github.com/andyrichardson/tipple/blob/master/docs/assets/logo.png?raw=true" width="250px" />
 
-A lightweight dependency-free, library for fetching data over REST in React.
+A lightweight dependency-free library for fetching data over REST in React.
 
 <p align="center">
-  <img src="https://img.shields.io/codecov/c/github/andyrichardson/tipple.svg" alt="coverage">
-  <img src="https://img.shields.io/github/package-json/v/andyrichardson/tipple.svg" alt="version" />
-  <img src="https://img.shields.io/npm/dt/tipple.svg" alt="downloads" />
-  <img src="https://img.shields.io/bundlephobia/minzip/tipple.svg" alt="size" />
+  <a href="https://gitlab.com/andyrichardson/tipple/pipelines">
+    <img src="https://img.shields.io/gitlab/pipeline/andyrichardson/tipple.svg" alt="Gitlab pipeline status">
+  </a>
+  <a href="https://codecov.io/gh/andyrichardson/tipple">
+    <img src="https://img.shields.io/codecov/c/github/andyrichardson/tipple.svg" alt="coverage">
+  </a>
+  <a href="https://npmjs.com/package/tipple">
+    <img src="https://img.shields.io/github/package-json/v/andyrichardson/tipple.svg" alt="version" />
+  </a>
+  <a href="https://bundlephobia.com/result?p=tipple">
+    <img src="https://img.shields.io/bundlephobia/minzip/tipple.svg" alt="size" />
+  </a>
 </p>
 
 ## What is Tipple?
