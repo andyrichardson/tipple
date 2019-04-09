@@ -9,7 +9,7 @@
     "tipple": "file:.."
   },
   "scripts": {
-    "start": "concurrently \"webpack-dev-server\" \"json-server db.json --port 5000\"",
+    "start": "concurrently \"webpack-dev-server\" \"json-server db.json --port 5000 -d 500\"",
     "preinstall": "npm i --prefix .. && npm run build --prefix .."
   },
   "eslintConfig": {

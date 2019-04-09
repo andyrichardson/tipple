@@ -19,7 +19,7 @@ interface UsePushOptions<D extends string> {
   fetchOptions?: RequestInit;
 }
 
-type UsePushResponse<T = any> = [PushState<T>, () => void, () => void];
+type UsePushResponse<T = any> = [PushState<T>, () => Promise<T>, () => void];
 
 export const usePush = <T = any, D extends string = string>(
   url: string,
@@ -40,8 +40,10 @@ export const usePush = <T = any, D extends string = string>(
 
       clearDomains(opts.domains);
       setState({ fetching: false, data: response });
+      return response;
     } catch (error) {
       setState({ ...state, error });
+      throw error;
     }
   }, [state, opts.domains]);
 

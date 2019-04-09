@@ -91,9 +91,9 @@ No surprises here, this function will re-execute the API call and update the sta
 This is used for pushing changes which to the server (methods such as `POST`, `PATCH`, `DELETE` .etc). Below is an example of a component using `usePush` to add a comment to a post.
 
 ```tsx
-import { useFetch } from 'tipple';
+import { usePush } from 'tipple';
 import { AddCommentResponse, Domain } from './types';
-import { ErrorCard, Spinner, UserCard } from './components';
+import { Spinner } from './components';
 
 export const AddComment: FC = () => {
   const [inputState, setState] = useState('');
@@ -106,7 +106,7 @@ export const AddComment: FC = () => {
   );
 
   if (req.fetching) {
-    alert('Adding comment');
+    return <Spinner />
   }
 
   if (req.error) {
@@ -115,7 +115,7 @@ export const AddComment: FC = () => {
   }
 
   if (req.data) {
-    alert('Push complete');
+    alert('Comment successfully added');
     clear();
   }
 
@@ -154,8 +154,10 @@ See the request definition for [useFetch](#Response).
 
 #### [..., execute]
 
-This triggers the request.
+This function triggers API call and updates the request state with fetching, response and error values. The execute function also returns a promise for use-cases where an immediate side-effect needs to be triggered.
+
+> Note: For most use cases, we've found it makes more sense to use `execute` and `clear` functions rather than the async functionality.
 
 #### [..., ..., clear]
 
-Clears request object back to its initial state. Triggering this will often be useful following the handling of an error / response data.
+Clears request object back to its initial state. Triggering this will often be useful following the handling of an error/response data.
