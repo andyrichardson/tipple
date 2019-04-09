@@ -16,8 +16,11 @@ lint:
 test:
   <<: *base
   stage: test
+  variables:
+    CODECOV_TOKEN: $CODECOV_TOKEN
   script:
-    - npm run test -- --coverage --coverageReporters=text-lcov | npx coveralls
+    - npm run test -- --coverage
+    - npx codecov
 
 build:
   <<: *base
