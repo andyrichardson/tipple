@@ -34,7 +34,7 @@ const getComments = (comments: FetchState<CommentData[]>) => {
       <div className="ant-list-header">{comments.data.length} replies</div>
       <hr />
       {comments.data.map(comment => (
-        <Comment content={comment.body} />
+        <Comment key={comment.id} content={comment.body} />
       ))}
     </>
   );
