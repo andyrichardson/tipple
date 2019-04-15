@@ -12,7 +12,7 @@ export const Post: FC<{ post: PostData }> = ({ post }) => {
 
   return (
     <Row>
-      <Card>
+      <Card data-testid="post">
         <h2>{post.title}</h2>
         {commentsContent}
       </Card>
@@ -31,7 +31,9 @@ const getComments = (comments: FetchState<CommentData[]>) => {
 
   return (
     <>
-      <div className="ant-list-header">{comments.data.length} replies</div>
+      <div className="ant-list-header" data-testid="replies-count">
+        {comments.data.length} replies
+      </div>
       <hr />
       {comments.data.map(comment => (
         <Comment key={comment.id} content={comment.body} />

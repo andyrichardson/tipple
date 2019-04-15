@@ -27,7 +27,9 @@ export const Posts: FC = () => {
       ))}
       {/* 
       // @ts-ignore */}
-      <Button onClick={refetch}>Refetch</Button>
+      <Button onClick={refetch} data-testid="refetch">
+        Refetch
+      </Button>
     </>
   );
 };
