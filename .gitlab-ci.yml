@@ -8,31 +8,36 @@ stages:
     - npm ci
   image: node:11
 
-lint:
-  <<: *base
-  stage: test
-  script:
-    - npm run lint
+# lint:
+#   <<: *base
+#   stage: test
+#   script:
+#     - npm run lint
 
-test:
-  <<: *base
-  stage: test
-  variables:
-    CODECOV_TOKEN: $CODECOV_TOKEN
-  script:
-    - npm run test -- --coverage
-    - npx codecov
+# test:
+#   <<: *base
+#   stage: test
+#   variables:
+#     CODECOV_TOKEN: $CODECOV_TOKEN
+#   script:
+#     - npm run test -- --coverage
+#     - npx codecov
 
-build:
-  <<: *base
-  stage: build
-  script:
-    - npm run build
+# build:
+#   <<: *base
+#   stage: build
+#   script:
+#     - npm run build
 
 e2e:
-  image: docker:latest
+  image:
+    name: docker/compose:1.24.0
+    entrypoint: ['']
   stage: e2e
   services:
-    - docker/compose:1.24.0
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
   script:
-    - -f example/docker-compose.yml run cypress
+    - docker-compose -f example/docker-compose.yml run cypress
