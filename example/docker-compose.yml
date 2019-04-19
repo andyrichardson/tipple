@@ -1,0 +1,37 @@
+version: '3.7'
+services:
+  web:
+    image: node:11
+    working_dir: /app/example
+    volumes:
+      - ../:/app
+      - ./db.json:/app/example/db.json:ro
+    environment:
+      API_ROUTE: http://web:5000
+    expose:
+      - '3000'
+      - '5000'
+    command:
+      - /bin/bash
+      - -c
+      - npm i && npm start
+
+  cypress:
+    image: cypress/browsers:chrome67
+    working_dir: /app
+    volumes:
+      - .:/app
+      - cypress_node_modules:/usr/local/lib/node_modules
+      - cypress_root:/root/.cache/Cypress
+    environment:
+      CYPRESS_baseUrl: http://web:3000
+    command:
+      - /bin/bash
+      - -c
+      - npm i -g cypress wait-on && wait-on $$CYPRESS_baseUrl && `npm bin`/cypress run -b chrome
+    depends_on:
+      - web
+
+volumes:
+  cypress_root:
+  cypress_node_modules:

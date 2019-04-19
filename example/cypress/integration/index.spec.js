@@ -39,7 +39,7 @@ context('Initial load', () => {
 context('Refetch', () => {
   before(() => {
     cy.server();
-    cy.route('http://localhost:5000/posts').as('getPosts');
+    cy.route('**/posts').as('getPosts');
     cy.visit('/');
   });
 
@@ -54,20 +54,18 @@ context('Refetch', () => {
 context('Push', () => {
   before(() => {
     cy.server();
-    cy.route({ url: 'http://localhost:5000/posts', method: 'GET' }).as(
-      'getPosts'
-    );
-    cy.route({ url: 'http://localhost:5000/posts', method: 'POST' }).as(
-      'addPost'
-    );
+    cy.route({ url: '**/posts', method: 'GET' }).as('getPosts');
+    cy.route({ url: '**/posts', method: 'POST' }).as('addPost');
     cy.visit('/');
+    cy.wait('@getPosts');
   });
 
   describe('on add post', () => {
     it('triggers API call and causes refetch of domain', () => {
       cy.get('input').type('Hello world');
-      cy.wait('@getPosts');
-      cy.get('button').click();
+      cy.get('button')
+        .eq(0)
+        .click();
       cy.wait('@addPost');
       cy.wait('@getPosts');
       cy.get('[data-testid="post"]').should('have.length', 3);

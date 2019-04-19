@@ -1,6 +1,7 @@
 stages:
   - test
   - build
+  - e2e
 
 .base: &base
   before_script:
@@ -27,3 +28,11 @@ build:
   stage: build
   script:
     - npm run build
+
+e2e:
+  image: docker:latest
+  stage: e2e
+  services:
+    - docker/compose:1.24.0
+  script:
+    - -f example/docker-compose.yml run cypress

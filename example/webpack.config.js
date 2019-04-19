@@ -1,5 +1,6 @@
-const path = require('path');
+const Dotenv = require('dotenv-webpack');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 module.exports = {
   entry: path.resolve(__dirname, './src/index.tsx'),
@@ -39,7 +40,7 @@ module.exports = {
     },
     extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx', '.json'],
   },
-  plugins: [new HTMLWebpackPlugin()],
+  plugins: [new HTMLWebpackPlugin(), new Dotenv({ systemvars: true })],
   output: {
     path: path.resolve(__dirname, '.build'),
     filename: 'bundle.js',
@@ -47,7 +48,7 @@ module.exports = {
   },
   devtool: 'eval-source-map',
   devServer: {
-    allowedHosts: ['app'],
+    allowedHosts: ['localhost', '172.0.0.1', 'web'],
     host: '0.0.0.0',
     port: 3000,
     contentBase: path.join(__dirname, 'public'),

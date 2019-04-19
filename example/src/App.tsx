@@ -9,7 +9,7 @@ export const App: FC = () => {
   return (
     <TippleProvider
       headers={{ 'content-type': 'application/json' }}
-      baseUrl={'http://localhost:5000'}
+      baseUrl={process.env.API_ROUTE}
     >
       <Layout.Content>
         <AddPost />
