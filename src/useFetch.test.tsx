@@ -4,7 +4,7 @@ jest.mock('./util', () => ({
 }));
 import React, { FC } from 'react';
 import renderer from 'react-test-renderer';
-import { useFetch, FetchState } from './useFetch';
+import { useFetch, FetchState, GeneralUseFetchOptions } from './useFetch';
 import { TippleContext } from './context';
 import { getKey, executeRequest } from './util';
 
@@ -104,7 +104,7 @@ describe('on init', () => {
       expect(addResponse).toBeCalledWith({
         data: response,
         key: key,
-        domains: opts.domains,
+        domains: (opts as GeneralUseFetchOptions).domains,
       });
     });
   });

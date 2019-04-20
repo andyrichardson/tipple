@@ -19,12 +19,12 @@ export interface FetchState<T = any> {
   error?: Error;
 }
 
-interface BaseUseFetchOptions {
+export interface BaseUseFetchOptions {
   onMount?: boolean;
   fetchOptions?: RequestInit;
 }
 
-interface GeneralUseFetchOptions<D extends string = string>
+export interface GeneralUseFetchOptions<D extends string = string>
   extends BaseUseFetchOptions {
   domains: D[];
   cachePolicy?: Exclude<CachePolicy, 'network-only'>;
