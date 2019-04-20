@@ -7,15 +7,36 @@ export type TypedUseFetch<D extends string> = <T extends any>(
   opts: UseFetchOptions<D>
 ) => UseFetchResponse<T>;
 
+export type CachePolicy =
+  | 'cache-first'
+  | 'cache-only'
+  | 'network-first'
+  | 'network-only';
+
 export interface FetchState<T = any> {
   fetching: boolean;
   data?: T;
   error?: Error;
 }
 
+interface BaseUseFetchOptions {
+  onMount?: boolean;
+  fetchOptions?: RequestInit;
+}
+
+interface GeneralUseFetchOptions<D extends string = string>
+  extends BaseUseFetchOptions {
+  domains: D[];
+  cachePolicy?: Exclude<CachePolicy, 'network-only'>;
+}
+
+interface NetworkOnlyUseFetchOptions extends BaseUseFetchOptions {
+  cachePolicy?: 'network-only';
+}
+
 interface UseFetchOptions<D extends string = string> {
   domains: D[];
-  cachePolicy?: 'cache-first' | 'cache-only' | 'network-first';
+  cachePolicy?: CachePolicy;
   onMount?: boolean;
   fetchOptions?: RequestInit;
 }
@@ -24,61 +45,78 @@ type UseFetchResponse<T = any> = [FetchState<T>, () => void];
 
 export const useFetch = <T = any, D extends string = string>(
   url: string,
-  opts: UseFetchOptions<D>
+  opts: GeneralUseFetchOptions<D> | NetworkOnlyUseFetchOptions
 ): UseFetchResponse<T> => {
   const { config, responses, addResponse } = useContext(TippleContext);
-  const [state, setState] = useState<FetchState<T>>({
-    fetching: opts.cachePolicy !== 'cache-only',
-  });
-
+  const cachePolicy = useMemo(
+    () => (opts.cachePolicy !== undefined ? opts.cachePolicy : 'cache-first'),
+    [opts.cachePolicy]
+  );
   /** Unique identifier of request. */
   const key = useMemo(() => getKey(url, opts.fetchOptions || {}), [
     url,
     opts.fetchOptions,
   ]);
 
-  /** Data parsed from cache/request. */
-  useMemo(() => {
+  const [fetching, setFetching] = useState<boolean>(
+    cachePolicy !== 'cache-only'
+  );
+  const [data, setData] = useState<T | undefined>(responses[key]);
+  const [error, setError] = useState<Error | undefined>(undefined);
+
+  const [state, setState] = useState<FetchState<T>>({
+    fetching: opts.cachePolicy !== 'cache-only', // Default to fetching on first render.
+  });
+
+  /** Data change in cache */
+  useEffect(() => {
+    // Data from cache is unchanged
     if (
       responses[key] === undefined ||
-      JSON.stringify(state.data) === JSON.stringify(responses[key])
+      JSON.stringify(data) === JSON.stringify(responses[key])
     ) {
       return;
     }
 
-    // Cache first and data changed
-    if (
-      opts.cachePolicy === 'cache-first' ||
-      opts.cachePolicy === 'cache-only' ||
-      opts.cachePolicy === undefined
-    ) {
-      return setState({ ...state, data: responses[key] });
+    if (cachePolicy === 'network-only') {
+      return;
     }
 
-    // Network first and data changed
-    if (opts.cachePolicy === 'network-first' && state.data !== undefined) {
-      return setState({ ...state, data: responses[key] });
+    // Initial network request is yet to complete
+    if (cachePolicy === 'network-first' && data === undefined) {
+      return;
     }
-  }, [state, opts.cachePolicy, responses[key]]);
+
+    setData(responses[key]);
+  }, [data, cachePolicy, responses[key]]);
 
   /** Executes fetching of data. */
   const doFetch = useCallback(async () => {
-    setState({ ...state, fetching: true });
+    setFetching(true);
 
     try {
       const response = await executeRequest(`${config.baseUrl || ''}${url}`, {
         ...opts.fetchOptions,
         headers: { ...config.headers, ...(opts.fetchOptions || {}).headers },
       });
-      addResponse({ data: response, key, domains: opts.domains });
-      setState({
-        fetching: false,
-        data: opts.cachePolicy === 'network-first' ? response : undefined,
-      });
+
+      // Sharing with cache
+      if (cachePolicy !== 'network-only') {
+        addResponse({
+          data: response,
+          key,
+          domains: (opts as BaseUseFetchOptions & GeneralUseFetchOptions<D>)
+            .domains,
+        });
+      }
+
+      setFetching(false);
+      setData(response);
     } catch (error) {
-      setState({ ...state, fetching: false, error });
+      setFetching(false);
+      setError(error);
     }
-  }, [state, opts.domains, addResponse]);
+  }, [config.baseUrl, JSON.stringify(opts), url, addResponse]);
 
   /** On mount. */
   useEffect(() => {
@@ -89,26 +127,22 @@ export const useFetch = <T = any, D extends string = string>(
 
   /** On data change. */
   useEffect(() => {
-    if (
-      !state.fetching &&
-      state.data === undefined &&
-      opts.cachePolicy !== 'cache-only'
-    ) {
+    if (!fetching && data === undefined && cachePolicy !== 'cache-only') {
       doFetch();
     }
-  }, [state.data, state.fetching]);
+  }, [fetching, data, doFetch]);
 
   /** On cache invalidation. */
   useEffect(() => {
     if (
-      !state.fetching &&
-      state.data !== undefined &&
+      !fetching &&
+      data !== undefined &&
       responses[key] === undefined &&
-      opts.cachePolicy !== 'cache-only'
+      cachePolicy !== 'cache-only'
     ) {
       doFetch();
     }
-  }, [state.data, state.fetching, responses[key]]);
+  }, [fetching, data, responses[key], cachePolicy, doFetch]);
 
-  return [{ ...state }, doFetch];
+  return [{ fetching, error, data }, doFetch];
 };

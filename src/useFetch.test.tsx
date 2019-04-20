@@ -14,6 +14,8 @@ const response = 'value';
 (getKey as jest.Mock).mockReturnValue(key);
 (executeRequest as jest.Mock).mockReturnValue(Promise.resolve(response));
 
+console.error = () => false;
+
 // Provider mocks
 let config: any = {
   baseUrl: 'http://url',
@@ -125,8 +127,10 @@ describe('on fetched', () => {
     expect(state.fetching).toBe(false);
   });
 
-  it('returns cached data', () => {
-    expect(state.data).toEqual(responses[key]);
+  it('returns cached data', async () => {
+    instance.update(<Fixture />);
+    await waitForAsync();
+    expect(state.data).toEqual(response);
   });
 });
 
@@ -168,8 +172,26 @@ describe('on invalidation', () => {
     await waitForAsync();
     responses[key] = undefined;
     instance.update(<Fixture />);
-    await waitForAsync();
     expect(executeRequest).toBeCalledTimes(2);
+  });
+});
+
+describe('on cache change', () => {
+  let instance: renderer.ReactTestRenderer;
+
+  beforeEach(() => {
+    instance = renderer.create(<Fixture />);
+  });
+
+  afterEach(() => instance.unmount());
+
+  it('updates data value', async () => {
+    instance.update(<Fixture />);
+    await waitForAsync();
+    responses[key] = 'new value';
+    instance.update(<Fixture />);
+    await waitForAsync();
+    expect(state.data).toEqual(responses[key]);
   });
 });
 
@@ -204,5 +226,41 @@ describe('cache-only', () => {
     instance.update(<Fixture />);
     await waitForAsync();
     expect(executeRequest).toBeCalledTimes(0);
+  });
+});
+
+describe('network only', () => {
+  let instance: renderer.ReactTestRenderer;
+
+  beforeEach(() => {
+    opts = { domains: ['example'], cachePolicy: 'network-only' };
+    instance = renderer.create(<Fixture />);
+  });
+
+  afterEach(() => instance.unmount());
+
+  it('defaults to fetching', () => {
+    expect(state.fetching).toBe(true);
+  });
+
+  it('calls executeRequest on mount', async () => {
+    instance.update(<Fixture />);
+    await waitForAsync();
+    expect(executeRequest).toBeCalledTimes(1);
+  });
+
+  it('returns value from response', async () => {
+    instance.update(<Fixture />);
+    await waitForAsync();
+    expect(state.data).toBe(response);
+  });
+
+  it('ignores changes to cache', async () => {
+    instance.update(<Fixture />);
+    await waitForAsync();
+    responses[key] = 'new value';
+    instance.update(<Fixture />);
+    await waitForAsync();
+    expect(state.data).toEqual(response);
   });
 });

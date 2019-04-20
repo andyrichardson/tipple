@@ -55,6 +55,9 @@ The way in which data is retrieved from the cache or network:
 - _cache-first (default)_ - cached data is returned and the fetch request is triggered.
 - _network-first_ - cached data is not returned until the fetch request returns and the cache is updated.
 - _cache-only_ - cached data is returned and no network request is made.
+- _network-only_ - the request is made in isolation and there is no attachment to the cache.
+
+> Note: When using the _network-only_ cache policy, you will not be able to specify a domain as the cache is not being used.
 
 ##### fetchOptions (optional)
 
