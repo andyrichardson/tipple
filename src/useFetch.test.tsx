@@ -14,8 +14,6 @@ const response = 'value';
 (getKey as jest.Mock).mockReturnValue(key);
 (executeRequest as jest.Mock).mockReturnValue(Promise.resolve(response));
 
-console.error = () => false;
-
 // Provider mocks
 let config: any = {
   baseUrl: 'http://url',
@@ -233,7 +231,7 @@ describe('network only', () => {
   let instance: renderer.ReactTestRenderer;
 
   beforeEach(() => {
-    opts = { domains: ['example'], cachePolicy: 'network-only' };
+    opts = { cachePolicy: 'network-only' };
     instance = renderer.create(<Fixture />);
   });
 
