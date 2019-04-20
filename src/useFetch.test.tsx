@@ -4,9 +4,10 @@ jest.mock('./util', () => ({
 }));
 import React, { FC } from 'react';
 import renderer from 'react-test-renderer';
-import { useFetch, FetchState, GeneralUseFetchOptions } from './useFetch';
+import { useFetch } from './useFetch';
 import { TippleContext } from './context';
 import { getKey, executeRequest } from './util';
+import { FetchState, GeneralUseFetchOptions } from './types';
 
 // Setup util mocks
 const key = '12345';
@@ -88,6 +89,19 @@ describe('on init', () => {
     expect(executeRequest).toBeCalledWith(`${config.baseUrl}${url}`, {
       ...opts.fetchOptions,
       headers: config.headers,
+    });
+  });
+
+  describe('onMount disabled', () => {
+    beforeEach(() => ((opts as GeneralUseFetchOptions).onMount = false));
+
+    it('defaults to not fetching', () => {
+      expect(state.fetching).toBe(true);
+    });
+
+    it("doesn't call executeRequest", async () => {
+      instance.update(<Fixture />);
+      expect(executeRequest).toBeCalledTimes(0);
     });
   });
 

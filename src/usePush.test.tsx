@@ -4,10 +4,10 @@ jest.mock('./util', () => ({
 }));
 import React, { FC } from 'react';
 import renderer, { act } from 'react-test-renderer';
-import { usePush } from './usePush';
 import { TippleContext } from './context';
+import { FetchState } from './types';
+import { usePush } from './usePush';
 import { getKey, executeRequest } from './util';
-import { FetchState } from './useFetch';
 
 // Setup util mocks
 const key = '12345';
