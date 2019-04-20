@@ -59,7 +59,11 @@ The way in which data is retrieved from the cache or network:
 
 > Note: When using the _network-only_ cache policy, you will not be able to specify a domain as the cache is not being used.
 
-##### fetchOptions (optional)
+##### onMount
+
+Whether the fetch should be triggered on initial mount (defaults to true).
+
+##### fetchOptions
 
 The [fetch 'init' argument](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) for the request. This can override globally configured options such as headers.
 
@@ -145,7 +149,7 @@ The endpoint URL (as [described for useFetch](#Arguments)).
 
 #### Additional options
 
-All the arguments for `usePush` are identical to that of `useFetch` with the exception of `cachePolicy`.
+All the arguments for `usePush` are identical to that of `useFetch` with the exception of `cachePolicy` and `onMount`.
 
 ### Response
 

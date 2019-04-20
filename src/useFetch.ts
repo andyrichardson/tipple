@@ -1,51 +1,11 @@
 import { useContext, useCallback, useState, useEffect, useMemo } from 'react';
 import { TippleContext } from './context';
 import { executeRequest, getKey } from './util';
-
-export type TypedUseFetch<D extends string> = <T extends any>(
-  url: string,
-  opts: UseFetchOptions<D>
-) => UseFetchResponse<T>;
-
-export type CachePolicy =
-  | 'cache-first'
-  | 'cache-only'
-  | 'network-first'
-  | 'network-only';
-
-export interface FetchState<T = any> {
-  fetching: boolean;
-  data?: T;
-  error?: Error;
-}
-
-export interface BaseUseFetchOptions {
-  onMount?: boolean;
-  fetchOptions?: RequestInit;
-}
-
-export interface GeneralUseFetchOptions<D extends string = string>
-  extends BaseUseFetchOptions {
-  domains: D[];
-  cachePolicy?: Exclude<CachePolicy, 'network-only'>;
-}
-
-interface NetworkOnlyUseFetchOptions extends BaseUseFetchOptions {
-  cachePolicy?: 'network-only';
-}
-
-interface UseFetchOptions<D extends string = string> {
-  domains: D[];
-  cachePolicy?: CachePolicy;
-  onMount?: boolean;
-  fetchOptions?: RequestInit;
-}
-
-type UseFetchResponse<T = any> = [FetchState<T>, () => void];
+import { UseFetchOptions, UseFetchResponse } from './types';
 
 export const useFetch = <T = any, D extends string = string>(
   url: string,
-  opts: GeneralUseFetchOptions<D> | NetworkOnlyUseFetchOptions
+  opts: UseFetchOptions<D>
 ): UseFetchResponse<T> => {
   const { config, responses, addResponse } = useContext(TippleContext);
   const cachePolicy = useMemo(
@@ -59,7 +19,7 @@ export const useFetch = <T = any, D extends string = string>(
   ]);
 
   const [fetching, setFetching] = useState<boolean>(
-    cachePolicy !== 'cache-only'
+    opts.cachePolicy !== 'cache-only' && opts.onMount !== false
   );
   const [data, setData] = useState<T | undefined>(responses[key]);
   const [error, setError] = useState<Error | undefined>(undefined);
@@ -97,12 +57,11 @@ export const useFetch = <T = any, D extends string = string>(
       });
 
       // Sharing with cache
-      if (cachePolicy !== 'network-only') {
+      if (opts.cachePolicy !== 'network-only') {
         addResponse({
           data: response,
           key,
-          domains: (opts as BaseUseFetchOptions & GeneralUseFetchOptions<D>)
-            .domains,
+          domains: opts.domains,
         });
       }
 
@@ -116,7 +75,7 @@ export const useFetch = <T = any, D extends string = string>(
 
   /** On mount. */
   useEffect(() => {
-    if (opts.cachePolicy !== 'cache-only') {
+    if (opts.cachePolicy !== 'cache-only' && opts.onMount !== false) {
       doFetch();
     }
   }, []);
