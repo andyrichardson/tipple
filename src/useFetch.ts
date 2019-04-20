@@ -64,10 +64,6 @@ export const useFetch = <T = any, D extends string = string>(
   const [data, setData] = useState<T | undefined>(responses[key]);
   const [error, setError] = useState<Error | undefined>(undefined);
 
-  const [state, setState] = useState<FetchState<T>>({
-    fetching: opts.cachePolicy !== 'cache-only', // Default to fetching on first render.
-  });
-
   /** Data change in cache */
   useEffect(() => {
     // Data from cache is unchanged
