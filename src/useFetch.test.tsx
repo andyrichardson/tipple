@@ -1,7 +1,6 @@
 jest.mock('./util', () => ({
   getKey: jest.fn(),
   executeRequest: jest.fn(),
-  shouldRefetch: require.requireActual('./util').shouldRefetch,
 }));
 import React, { FC } from 'react';
 import renderer from 'react-test-renderer';
