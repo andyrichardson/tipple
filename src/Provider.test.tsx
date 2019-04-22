@@ -27,10 +27,10 @@ describe('createAddResponse', () => {
   const data = { data: 'example5' };
 
   it('adds key to associated domains', () => {
-    const fn = createAddResponse(domains, responses, setDomains, setResponses);
+    const fn = createAddResponse(setDomains, setResponses);
     fn({ key, domains: domainsArr, data });
 
-    expect(setDomains).toBeCalledWith({
+    expect(setDomains.mock.calls[0][0](domains)).toEqual({
       ...domains,
       users: [...domains.users, key],
       posts: [...domains.posts, key],
@@ -38,19 +38,25 @@ describe('createAddResponse', () => {
   });
 
   it('adds response to collection of responses', () => {
-    const fn = createAddResponse(domains, responses, setDomains, setResponses);
+    const fn = createAddResponse(setDomains, setResponses);
     fn({ key, domains: domainsArr, data });
 
-    expect(setResponses).toBeCalledWith({ ...responses, [key]: data });
+    expect(setResponses.mock.calls[0][0](responses)).toEqual({
+      ...responses,
+      [key]: data,
+    });
   });
 });
 
 describe('createClearDomains', () => {
   it('sets responses as undefined for provided domains', () => {
-    const fn = createClearDomains(domains, responses, setResponses);
+    const fn = createClearDomains(domains, setResponses);
     fn(['comments']);
 
-    expect(setResponses).toBeCalledWith({ ...responses, key2: undefined });
+    expect(setResponses.mock.calls[0][0](responses)).toEqual({
+      ...responses,
+      key2: undefined,
+    });
   });
 });
 

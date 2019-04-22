@@ -51,5 +51,19 @@ export type TypedUseFetch<D extends string> = <T extends any>(
   opts: UseFetchOptions<D>
 ) => UseFetchResponse<T>;
 
+export type DomainMap = Record<string, string[]>;
+export type ResponseMap = Record<string, any>;
+
+/**
+ * Tipple provider props.
+ *
+ * @param baseUrl - Url to prefix all requests (e.g. "https://mydomain.com/api").
+ * @param headers - HTTP headers to append to all requests.
+ */
+export interface ProviderProps {
+  baseUrl?: string;
+  headers?: RequestInit['headers'];
+}
+
 /** Utility type to Omit keys from an interface/object type */
 export type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
