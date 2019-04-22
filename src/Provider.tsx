@@ -51,7 +51,7 @@ export const createAddResponse = (
 /** Logic for clearing domains. */
 export const createClearDomains = (
   domains: Record<string, string[]>,
-  setResponses: Dispatch<SetStateAction<Record<string, any>>>
+  setResponses: Dispatch<SetStateAction<ResponseMap>>
 ): TippleContext['clearDomains'] => targetDomains =>
   targetDomains.forEach(domain => {
     if (domains[domain] === undefined) {
