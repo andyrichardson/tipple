@@ -1,19 +1,6 @@
-import React, { FC, useState, useMemo } from 'react';
+import React, { FC, useState, useMemo, Dispatch, SetStateAction } from 'react';
 import { TippleContext } from './context';
-
-type DomainMap = Record<string, string[]>;
-type ResponseMap = Record<string, any>;
-
-/**
- * Tipple provider props.
- *
- * @param baseUrl - Url to prefix all requests (e.g. "https://mydomain.com/api").
- * @param headers - HTTP headers to append to all requests.
- */
-interface ProviderProps {
-  baseUrl?: string;
-  headers?: RequestInit['headers'];
-}
+import { ProviderProps, DomainMap, ResponseMap } from './types';
 
 /** Provider for using tipple. */
 export const Provider: FC<ProviderProps> = ({ baseUrl, headers, children }) => {
@@ -21,12 +8,13 @@ export const Provider: FC<ProviderProps> = ({ baseUrl, headers, children }) => {
   const [responses, setResponses] = useState<ResponseMap>({});
 
   const addResponse = useMemo(
-    () => createAddResponse(domains, responses, setDomains, setResponses),
-    [domains, responses]
+    () => createAddResponse(setDomains, setResponses),
+    []
   );
+
   const clearDomains = useMemo(
-    () => createClearDomains(domains, responses, setResponses),
-    [domains, responses]
+    () => createClearDomains(domains, setResponses),
+    [domains]
   );
 
   const config = { baseUrl, headers };
@@ -42,37 +30,44 @@ export const Provider: FC<ProviderProps> = ({ baseUrl, headers, children }) => {
 
 /** Logic for adding a response. */
 export const createAddResponse = (
-  domains: Record<string, string[]>,
-  responses: Record<string, any>,
-  setDomains: (arg: Record<string, string[]>) => void,
-  setResponses: (arg: Record<string, any>) => void
-): TippleContext['addResponse'] => ({ key, domains: domainArr, data }) => {
-  const updatedDomains = domainArr.reduce(
-    (p, d) => ({ ...p, [d]: p[d] === undefined ? [key] : [...p[d], key] }),
-    domains
+  setDomains: Dispatch<SetStateAction<DomainMap>>,
+  setResponses: Dispatch<SetStateAction<ResponseMap>>
+): TippleContext['addResponse'] => ({ key, domains, data }) => {
+  // Add key to specified domains
+  setDomains(domainsState =>
+    domains.reduce(
+      (p, d) => ({ ...p, [d]: p[d] === undefined ? [key] : [...p[d], key] }),
+      domainsState
+    )
   );
 
-  setDomains(updatedDomains);
-  setResponses({ ...responses, [key]: data });
+  // Update responses
+  setResponses(responses => ({
+    ...responses,
+    [key]: { refetch: false, data },
+  }));
 };
 
 /** Logic for clearing domains. */
 export const createClearDomains = (
   domains: Record<string, string[]>,
-  responses: Record<string, any>,
-  setResponses: (arg: Record<string, any>) => void
+  setResponses: Dispatch<SetStateAction<ResponseMap>>
 ): TippleContext['clearDomains'] => targetDomains =>
   targetDomains.forEach(domain => {
     if (domains[domain] === undefined) {
       return;
     }
 
-    const updatedResponses = domains[domain].reduce(
-      (p, d) => ({
-        ...p,
-        [d]: undefined,
-      }),
-      responses
+    setResponses(responsesState =>
+      domains[domain].reduce(
+        (p, d) => ({
+          ...p,
+          [d]: {
+            ...p[d],
+            refetch: true,
+          },
+        }),
+        responsesState
+      )
     );
-    setResponses(updatedResponses);
   });

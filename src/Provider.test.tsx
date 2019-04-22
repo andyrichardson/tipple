@@ -27,10 +27,10 @@ describe('createAddResponse', () => {
   const data = { data: 'example5' };
 
   it('adds key to associated domains', () => {
-    const fn = createAddResponse(domains, responses, setDomains, setResponses);
+    const fn = createAddResponse(setDomains, setResponses);
     fn({ key, domains: domainsArr, data });
 
-    expect(setDomains).toBeCalledWith({
+    expect(setDomains.mock.calls[0][0](domains)).toEqual({
       ...domains,
       users: [...domains.users, key],
       posts: [...domains.posts, key],
@@ -38,19 +38,31 @@ describe('createAddResponse', () => {
   });
 
   it('adds response to collection of responses', () => {
-    const fn = createAddResponse(domains, responses, setDomains, setResponses);
+    const fn = createAddResponse(setDomains, setResponses);
     fn({ key, domains: domainsArr, data });
 
-    expect(setResponses).toBeCalledWith({ ...responses, [key]: data });
+    expect(setResponses.mock.calls[0][0](responses)).toEqual({
+      ...responses,
+      [key]: {
+        refetch: false,
+        data,
+      },
+    });
   });
 });
 
 describe('createClearDomains', () => {
   it('sets responses as undefined for provided domains', () => {
-    const fn = createClearDomains(domains, responses, setResponses);
+    const fn = createClearDomains(domains, setResponses);
     fn(['comments']);
 
-    expect(setResponses).toBeCalledWith({ ...responses, key2: undefined });
+    expect(setResponses.mock.calls[0][0](responses)).toEqual({
+      ...responses,
+      key2: {
+        refetch: true,
+        data: responses.key2.data,
+      },
+    });
   });
 });
 
@@ -98,7 +110,9 @@ describe('provider', () => {
     it('context responses are updated', () => {
       act(() => context.addResponse(args));
 
-      expect(context.responses).toEqual({ [args.key]: args.data });
+      expect(context.responses).toEqual({
+        [args.key]: { data: args.data, refetch: false },
+      });
     });
   });
 
@@ -117,9 +131,13 @@ describe('provider', () => {
       act(() => context.addResponse(args3));
     });
 
-    it('clears responses in domain', () => {
+    it('adds refetch to responses in domain', () => {
       act(() => context.clearDomains(['domain1']));
-      expect(context.responses).toEqual({ [args2.key]: args2.data });
+      expect(context.responses).toEqual({
+        [args2.key]: { data: args2.data, refetch: false },
+        [args1.key]: { data: args1.data, refetch: true },
+        [args3.key]: { data: args3.data, refetch: true },
+      });
     });
   });
 });

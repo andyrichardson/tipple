@@ -8,7 +8,7 @@ export const Posts: FC = () => {
     domains: ['posts'],
   });
 
-  if (posts.fetching || posts.data === undefined) {
+  if (posts.fetching && posts.data === undefined) {
     return (
       <div style={{ textAlign: 'center' }}>
         <Spin size="large" />
@@ -16,7 +16,7 @@ export const Posts: FC = () => {
     );
   }
 
-  if (posts.error !== undefined) {
+  if (posts.error !== undefined || posts.data === undefined) {
     return <div>Error!</div>;
   }
 

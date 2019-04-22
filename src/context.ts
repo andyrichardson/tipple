@@ -1,4 +1,5 @@
 import { createContext } from 'react';
+import { DomainMap, ResponseMap } from './types';
 
 export interface AddResponseArgs<D extends string = string> {
   key: string;
@@ -13,8 +14,8 @@ export interface ContextConfig {
 
 export interface TippleContext<D extends string = string> {
   config: ContextConfig;
-  domains: Record<D, string[]>;
-  responses: Record<string, any>;
+  domains: DomainMap;
+  responses: ResponseMap;
   addResponse: (args: AddResponseArgs<D>) => void;
   clearDomains: (domain: D[]) => void;
 }

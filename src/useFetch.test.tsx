@@ -20,7 +20,7 @@ let config: any = {
   baseUrl: 'http://url',
   headers: { 'content-type': 'application/json' },
 };
-let responses: any = { '12345': [1, 2, 3] };
+let responses: any = { '12345': { data: [1, 2, 3], refetch: false } };
 let domains: any = {};
 let addResponse = jest.fn();
 let clearDomains = jest.fn();
@@ -58,7 +58,7 @@ beforeEach(() => {
     baseUrl: 'http://url',
     headers: { 'content-type': 'application/json' },
   };
-  responses = { '12345': [1, 2, 3] };
+  responses = { '12345': { data: [1, 2, 3], refetch: false } };
   domains = {};
   url = '/users';
   opts = { domains: ['any'] };
@@ -182,7 +182,7 @@ describe('on invalidation', () => {
   it('calls executeRequest again', async () => {
     instance.update(<Fixture />);
     await waitForAsync();
-    responses[key] = undefined;
+    responses[key] = { ...responses[key], refetch: true };
     instance.update(<Fixture />);
     expect(executeRequest).toBeCalledTimes(2);
   });
@@ -200,10 +200,10 @@ describe('on cache change', () => {
   it('updates data value', async () => {
     instance.update(<Fixture />);
     await waitForAsync();
-    responses[key] = 'new value';
+    responses[key] = { data: 'new value', refetch: false };
     instance.update(<Fixture />);
     await waitForAsync();
-    expect(state.data).toEqual(responses[key]);
+    expect(state.data).toEqual(responses[key].data);
   });
 });
 
@@ -222,7 +222,7 @@ describe('cache-only', () => {
   });
 
   it('returns value from cache', () => {
-    expect(state.data).toBe(responses[key]);
+    expect(state.data).toBe(responses[key].data);
   });
 
   it('does not call executeRequest on mount', async () => {
@@ -270,7 +270,7 @@ describe('network only', () => {
   it('ignores changes to cache', async () => {
     instance.update(<Fixture />);
     await waitForAsync();
-    responses[key] = 'new value';
+    responses[key] = { data: 'new value' };
     instance.update(<Fixture />);
     await waitForAsync();
     expect(state.data).toEqual(response);
