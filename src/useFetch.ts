@@ -1,12 +1,4 @@
-import {
-  useContext,
-  useCallback,
-  useState,
-  useEffect,
-  useMemo,
-  Dispatch,
-  SetStateAction,
-} from 'react';
+import { useContext, useCallback, useState, useEffect, useMemo } from 'react';
 import { TippleContext } from './context';
 import { executeRequest, getKey } from './util';
 import { UseFetchOptions, UseFetchResponse } from './types';

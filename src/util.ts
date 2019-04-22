@@ -1,4 +1,3 @@
-import { ResponseMap } from './types';
 /** Gets unique key of request. */
 export const getKey = (url: string, fetchArgs: RequestInit) =>
   `${url}+${fetchArgs.body !== undefined ? fetchArgs.body : ''}`;
