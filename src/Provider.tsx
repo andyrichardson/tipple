@@ -30,8 +30,8 @@ export const Provider: FC<ProviderProps> = ({ baseUrl, headers, children }) => {
 
 /** Logic for adding a response. */
 export const createAddResponse = (
-  setDomains: Dispatch<SetStateAction<Record<string, string[]>>>,
-  setResponses: Dispatch<SetStateAction<Record<string, any>>>
+  setDomains: Dispatch<SetStateAction<DomainMap>>,
+  setResponses: Dispatch<SetStateAction<ResponseMap>>
 ): TippleContext['addResponse'] => ({ key, domains, data }) => {
   // Add key to specified domains
   setDomains(domainsState =>
@@ -41,7 +41,11 @@ export const createAddResponse = (
     )
   );
 
-  setResponses(responses => ({ ...responses, [key]: data }));
+  // Update responses
+  setResponses(responses => ({
+    ...responses,
+    [key]: { refetch: false, data },
+  }));
 };
 
 /** Logic for clearing domains. */
@@ -58,7 +62,10 @@ export const createClearDomains = (
       domains[domain].reduce(
         (p, d) => ({
           ...p,
-          [d]: undefined,
+          [d]: {
+            ...p[d],
+            refetch: true,
+          },
         }),
         responsesState
       )

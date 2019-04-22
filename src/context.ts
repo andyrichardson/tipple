@@ -14,7 +14,7 @@ export interface ContextConfig {
 export interface TippleContext<D extends string = string> {
   config: ContextConfig;
   domains: Record<D, string[]>;
-  responses: Record<string, any>;
+  responses: Record<string, { refetch: boolean; data: any }>;
   addResponse: (args: AddResponseArgs<D>) => void;
   clearDomains: (domain: D[]) => void;
 }

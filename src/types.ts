@@ -51,8 +51,11 @@ export type TypedUseFetch<D extends string> = <T extends any>(
   opts: UseFetchOptions<D>
 ) => UseFetchResponse<T>;
 
+/** Map of domain strings pointing to request keys */
 export type DomainMap = Record<string, string[]>;
-export type ResponseMap = Record<string, any>;
+
+/** Map of request keys pointing to data states and refetch values */
+export type ResponseMap = Record<string, { data: any; refetch: boolean }>;
 
 /**
  * Tipple provider props.
