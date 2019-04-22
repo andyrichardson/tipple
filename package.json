@@ -3,6 +3,7 @@
   "version": "0.3.0",
   "description": "A lightweight dependency-free library for fetching data over REST in React.",
   "main": "dist/index.js",
+  "sideEffects": false,
   "keywords": [
     "tipple",
     "react",
