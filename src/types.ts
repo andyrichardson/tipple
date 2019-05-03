@@ -8,6 +8,7 @@ export type CachePolicy =
 export interface BaseUseFetchOptions<D extends string = string> {
   onMount?: boolean;
   fetchOptions?: RequestInit;
+  baseUrl?: string;
   domains: D[];
 }
 
