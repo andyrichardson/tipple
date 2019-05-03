@@ -55,6 +55,8 @@ const waitForAsync = (delay = 20) =>
 
 beforeEach(jest.clearAllMocks);
 
+beforeEach(() => (opts = { domains: ['users'] }));
+
 describe('on init', () => {
   let instance: renderer.ReactTestRenderer;
 
@@ -86,6 +88,14 @@ describe('on doFetch', () => {
   it('calls executeRequest with url and options', () => {
     doFetch();
     expect(executeRequest).toBeCalledWith(`${config.baseUrl}${url}`, {
+      headers: config.headers,
+    });
+  });
+
+  it('calls executeRequest with baseUrl override', () => {
+    opts.baseUrl = 'http://exampleBaseUrl';
+    doFetch();
+    expect(executeRequest).toBeCalledWith(`${opts.baseUrl}${url}`, {
       headers: config.headers,
     });
   });

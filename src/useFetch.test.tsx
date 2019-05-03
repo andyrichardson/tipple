@@ -105,6 +105,20 @@ describe('on init', () => {
     });
   });
 
+  describe('baseUrl set', () => {
+    beforeEach(() => {
+      opts.baseUrl = 'http://exampleBaseUrl';
+    });
+
+    it('calls executeRequest with baseUrl override', () => {
+      instance.update(<Fixture />);
+      expect(executeRequest).toBeCalledWith(`${opts.baseUrl}${url}`, {
+        ...opts.fetchOptions,
+        headers: config.headers,
+      });
+    });
+  });
+
   describe('addResponse', () => {
     it('is called', async () => {
       instance.update(<Fixture />);

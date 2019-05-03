@@ -16,6 +16,7 @@ export interface PushState<T = any> {
 interface UsePushOptions<D extends string> {
   domains: D[];
   onMount?: boolean;
+  baseUrl?: string;
   fetchOptions?: RequestInit;
 }
 
@@ -33,10 +34,13 @@ export const usePush = <T = any, D extends string = string>(
     setState({ ...state, fetching: true });
 
     try {
-      const response = await executeRequest(`${config.baseUrl || ''}${url}`, {
-        ...opts.fetchOptions,
-        headers: { ...config.headers, ...(opts.fetchOptions || {}).headers },
-      });
+      const response = await executeRequest(
+        `${opts.baseUrl || config.baseUrl || ''}${url}`,
+        {
+          ...opts.fetchOptions,
+          headers: { ...config.headers, ...(opts.fetchOptions || {}).headers },
+        }
+      );
 
       clearDomains(opts.domains);
       setState({ fetching: false, data: response });
