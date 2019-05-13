@@ -34,10 +34,13 @@ export const useFetch = <T = any, D extends string = string>(
     setFetching(true);
 
     try {
-      const response = await executeRequest(`${config.baseUrl || ''}${url}`, {
-        ...opts.fetchOptions,
-        headers: { ...config.headers, ...(opts.fetchOptions || {}).headers },
-      });
+      const response = await executeRequest(
+        `${opts.baseUrl || config.baseUrl || ''}${url}`,
+        {
+          ...opts.fetchOptions,
+          headers: { ...config.headers, ...(opts.fetchOptions || {}).headers },
+        }
+      );
 
       // Sharing with cache
       if (opts.cachePolicy !== 'network-only') {
