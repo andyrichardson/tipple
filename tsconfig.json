@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
+    "target": "esnext",
+    "module": "esnext",
     "jsx": "react",
     "lib": ["dom", "ES2015"],
     "strict": true,
     "esModuleInterop": true,
     "declaration": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "sourceMap": true
   },
-  "files": ["src/index"]
+  "files": ["src/index.ts", "src/types.ts"]
 }

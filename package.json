@@ -3,6 +3,10 @@
   "version": "0.3.0",
   "description": "A lightweight dependency-free library for fetching data over REST in React.",
   "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "umd:main": "dist/index.umd.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
   "keywords": [
     "tipple",
     "react",
@@ -13,7 +17,7 @@
     "cache"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "microbundle build",
     "test": "jest",
     "lint": "eslint src/**/*",
     "prepack": "npm run lint && npm run test && npm run build"
@@ -39,6 +43,7 @@
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-react": "^7.12.4",
     "jest": "^24.7.1",
+    "microbundle": "^0.11.0",
     "prettier": "^1.17.0",
     "react": "^16.8.6",
     "react-test-renderer": "^16.8.6",

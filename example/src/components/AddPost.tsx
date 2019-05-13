@@ -3,7 +3,6 @@ import React, { useState, useCallback, useRef } from 'react';
 import { usePush } from 'tipple';
 
 export const AddPost = () => {
-  const timingOut = useRef(false);
   const [body, setBody] = useState<any>({ author: 'user', title: '' });
   const [response, addPost, clearResponse] = usePush('/posts', {
     domains: ['posts'],
@@ -32,8 +31,6 @@ export const AddPost = () => {
             />
           </Col>
           <Col span={5}>
-            {/* 
-            // @ts-ignore */}
             <Button type="primary" onClick={addPost}>
               Add post
             </Button>
