@@ -40,16 +40,16 @@ const [data, refetch] = useQuery('/users', { domains: ['users'] }); // The fetch
 
 > Note: for consistency, it's best to avoid suffixing your baseUrl with a forward slash.
 
-#### headers
+#### fetchOptions
 
-Here you can specify any default headers for API calls. This is often useful for specifying a default content-type or for authorization purposes.
+Here you can specify any default fetchOptions for API calls. This is often useful for specifying default request headers or for authorization purposes. These defaults will be automatically overridden by the fetchOptions specified in the _useFetch_ and _useQuery_ hooks.
 
 ```tsx
 export const App: FC = () => (
-  <TippleProvider headers={{ 'Content-Type': 'application/json' }}>
+  <TippleProvider baseUrl={'http://localhost:5000/api'} fetchOptions={{ headers: { 'Content-Type': 'application/json' }}}>
     <HomePage />
   </TippleProvider>;
 );
 ```
 
-> Note: default headers can be overridden at a later stage with `fetchOptions`.
+> Note: `fetchOptions` can be a function. If this is the case, it will be called with the `fetchOptions` value that was passed to the requesting hook.
