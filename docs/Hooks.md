@@ -69,7 +69,7 @@ An optional baseUrl which overrides the default given to the provider.
 
 ##### fetchOptions
 
-The [fetch 'init' argument](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) for the request. This can override globally configured options such as headers.
+The [fetch 'init' argument](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) for the request. This can override globally configured options.
 
 ### Response
 

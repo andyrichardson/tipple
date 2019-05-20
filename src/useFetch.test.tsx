@@ -1,6 +1,7 @@
 jest.mock('./util', () => ({
   getKey: jest.fn(),
   executeRequest: jest.fn(),
+  mergeFetchOptions: jest.requireActual('./util').mergeFetchOptions,
 }));
 import React, { FC } from 'react';
 import renderer from 'react-test-renderer';
@@ -18,7 +19,7 @@ const response = 'value';
 // Provider mocks
 let config: any = {
   baseUrl: 'http://url',
-  headers: { 'content-type': 'application/json' },
+  fetchOptions: { headers: { 'content-type': 'application/json' } },
 };
 let responses: any = { '12345': { data: [1, 2, 3], refetch: false } };
 let domains: any = {};
@@ -87,8 +88,9 @@ describe('on init', () => {
   it('calls executeRequest with url and opts', async () => {
     instance.update(<Fixture />);
     expect(executeRequest).toBeCalledWith(`${config.baseUrl}${url}`, {
+      method: 'GET',
+      ...config.fetchOptions,
       ...opts.fetchOptions,
-      headers: config.headers,
     });
   });
 
@@ -113,8 +115,9 @@ describe('on init', () => {
     it('calls executeRequest with baseUrl override', () => {
       instance.update(<Fixture />);
       expect(executeRequest).toBeCalledWith(`${opts.baseUrl}${url}`, {
+        method: 'GET',
+        ...config.fetchOptions,
         ...opts.fetchOptions,
-        headers: config.headers,
       });
     });
   });

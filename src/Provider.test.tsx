@@ -76,12 +76,12 @@ const ChildComponent: FC = () => {
 describe('provider', () => {
   const config = {
     baseUrl: 'http://example',
-    headers: { 'content-type': 'application/json' },
+    fetchOptions: { headers: { 'content-type': 'application/json' } },
   };
 
   beforeEach(() => {
     renderer.create(
-      <Provider baseUrl={config.baseUrl} headers={config.headers}>
+      <Provider baseUrl={config.baseUrl} fetchOptions={config.fetchOptions}>
         <ChildComponent />
       </Provider>
     );

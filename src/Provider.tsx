@@ -3,7 +3,11 @@ import { TippleContext } from './context';
 import { ProviderProps, DomainMap, ResponseMap } from './types';
 
 /** Provider for using tipple. */
-export const Provider: FC<ProviderProps> = ({ baseUrl, headers, children }) => {
+export const Provider: FC<ProviderProps> = ({
+  baseUrl,
+  fetchOptions,
+  children,
+}) => {
   const [domains, setDomains] = useState<DomainMap>({});
   const [responses, setResponses] = useState<ResponseMap>({});
 
@@ -17,7 +21,7 @@ export const Provider: FC<ProviderProps> = ({ baseUrl, headers, children }) => {
     [domains]
   );
 
-  const config = { baseUrl, headers };
+  const config = { baseUrl, fetchOptions };
 
   return (
     <TippleContext.Provider

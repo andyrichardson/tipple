@@ -1,6 +1,6 @@
 import { useContext, useCallback, useState } from 'react';
 import { TippleContext } from './context';
-import { executeRequest } from './util';
+import { executeRequest, mergeFetchOptions } from './util';
 
 export type TypedUsePush<D extends string> = <T extends any>(
   url: string,
@@ -22,6 +22,7 @@ interface UsePushOptions<D extends string> {
 
 type UsePushResponse<T = any> = [PushState<T>, () => Promise<T>, () => void];
 
+/** Hook for executing push requests (POST, PUT, DELETE, etc.). */
 export const usePush = <T = any, D extends string = string>(
   url: string,
   opts: UsePushOptions<D>
@@ -37,8 +38,8 @@ export const usePush = <T = any, D extends string = string>(
       const response = await executeRequest(
         `${opts.baseUrl || config.baseUrl || ''}${url}`,
         {
-          ...opts.fetchOptions,
-          headers: { ...config.headers, ...(opts.fetchOptions || {}).headers },
+          method: 'POST',
+          ...mergeFetchOptions(config.fetchOptions, opts.fetchOptions),
         }
       );
 
@@ -49,7 +50,7 @@ export const usePush = <T = any, D extends string = string>(
       setState({ ...state, error });
       throw error;
     }
-  }, [state, opts.domains]);
+  }, [state, JSON.stringify(opts)]);
 
   const reset = useCallback(() => setState({ fetching: false }), []);
 

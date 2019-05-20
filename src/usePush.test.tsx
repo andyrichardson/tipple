@@ -1,6 +1,7 @@
 jest.mock('./util', () => ({
   getKey: jest.fn(),
   executeRequest: jest.fn(),
+  mergeFetchOptions: jest.requireActual('./util').mergeFetchOptions,
 }));
 import React, { FC } from 'react';
 import renderer, { act } from 'react-test-renderer';
@@ -18,7 +19,7 @@ const response = 'value';
 // Provider mocks
 let config: any = {
   baseUrl: 'http://url',
-  headers: { 'content-type': 'application/json' },
+  fetchOptions: { headers: { 'content-type': 'application/json' } },
 };
 
 let domains: any = {};
@@ -88,7 +89,17 @@ describe('on doFetch', () => {
   it('calls executeRequest with url and options', () => {
     doFetch();
     expect(executeRequest).toBeCalledWith(`${config.baseUrl}${url}`, {
-      headers: config.headers,
+      ...config.fetchOptions,
+      method: 'POST',
+    });
+  });
+
+  it('calls executeRequest with non-post method', () => {
+    opts.fetchOptions = { method: 'PUT' };
+    doFetch();
+    expect(executeRequest).toBeCalledWith(`${config.baseUrl}${url}`, {
+      ...config.fetchOptions,
+      method: 'PUT',
     });
   });
 
@@ -96,7 +107,8 @@ describe('on doFetch', () => {
     opts.baseUrl = 'http://exampleBaseUrl';
     doFetch();
     expect(executeRequest).toBeCalledWith(`${opts.baseUrl}${url}`, {
-      headers: config.headers,
+      ...config.fetchOptions,
+      method: 'POST',
     });
   });
 

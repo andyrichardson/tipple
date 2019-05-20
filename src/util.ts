@@ -1,3 +1,5 @@
+import { ContextConfig } from './context';
+
 /** Gets unique key of request. */
 export const getKey = (url: string, fetchArgs: RequestInit) =>
   `${url}+${fetchArgs.body !== undefined ? fetchArgs.body : ''}`;
@@ -13,3 +15,19 @@ export const executeRequest = async (url: string, fetchArgs: RequestInit) => {
 
   return json;
 };
+
+/** Join hook fetchOptions with global config. */
+export const mergeFetchOptions = (
+  contextOptions: ContextConfig['fetchOptions'] = o => o,
+  clientOptions: RequestInit = {}
+) =>
+  typeof contextOptions === 'function'
+    ? contextOptions(clientOptions)
+    : {
+        ...contextOptions,
+        ...clientOptions,
+        headers:
+          contextOptions === undefined
+            ? clientOptions.headers
+            : { ...contextOptions.headers, ...clientOptions.headers },
+      };
