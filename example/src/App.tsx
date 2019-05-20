@@ -8,7 +8,7 @@ import './main.css';
 export const App: FC = () => {
   return (
     <TippleProvider
-      headers={{ 'content-type': 'application/json' }}
+      fetchOptions={{ headers: { 'content-type': 'application/json' } }}
       baseUrl={'http://localhost:5000'}
     >
       <Layout.Content>
