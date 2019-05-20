@@ -43,7 +43,7 @@ export interface FetchState<T = any> {
   error?: Error;
 }
 
-/** useFetch hook response. */
+/** useFetch hook response ([fetchState, refetch]). */
 export type UseFetchResponse<T = any> = [FetchState<T>, () => void];
 
 /** Re-export utility type for enforcing domain. */
@@ -58,15 +58,12 @@ export type DomainMap = Record<string, string[]>;
 /** Map of request keys pointing to data states and refetch values */
 export type ResponseMap = Record<string, { data: any; refetch: boolean }>;
 
-/**
- * Tipple provider props.
- *
- * @param baseUrl - Url to prefix all requests (e.g. "https://mydomain.com/api").
- * @param headers - HTTP headers to append to all requests.
- */
-export interface ProviderProps {
+/** Tipple provider props. */
+export type ProviderProps = {
+  /** Url to prefix all requests (e.g. "https://mydomain.com/api"). */
   baseUrl?: string;
-  headers?: RequestInit['headers'];
+  /** HTTP headers to append to all requests. */
+  fetchOptions?: RequestInit | ((arg?: RequestInit) => RequestInit | undefined);
 }
 
 /** Utility type to Omit keys from an interface/object type */

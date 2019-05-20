@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { DomainMap, ResponseMap } from './types';
+import { DomainMap, ResponseMap, ProviderProps } from './types';
 
 export interface AddResponseArgs<D extends string = string> {
   key: string;
@@ -9,7 +9,7 @@ export interface AddResponseArgs<D extends string = string> {
 
 export interface ContextConfig {
   baseUrl?: string;
-  headers?: RequestInit['headers'];
+  fetchOptions?: ProviderProps['fetchOptions'];
 }
 
 export interface TippleContext<D extends string = string> {
