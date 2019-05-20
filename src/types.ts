@@ -59,7 +59,7 @@ export type DomainMap = Record<string, string[]>;
 export type ResponseMap = Record<string, { data: any; refetch: boolean }>;
 
 /** Tipple provider props. */
-export type ProviderProps = {
+export interface ProviderProps {
   /** Url to prefix all requests (e.g. "https://mydomain.com/api"). */
   baseUrl?: string;
   /** HTTP headers to append to all requests. */

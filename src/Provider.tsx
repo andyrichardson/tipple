@@ -3,7 +3,11 @@ import { TippleContext } from './context';
 import { ProviderProps, DomainMap, ResponseMap } from './types';
 
 /** Provider for using tipple. */
-export const Provider: FC<ProviderProps> = ({ baseUrl, fetchOptions, children }) => {
+export const Provider: FC<ProviderProps> = ({
+  baseUrl,
+  fetchOptions,
+  children,
+}) => {
   const [domains, setDomains] = useState<DomainMap>({});
   const [responses, setResponses] = useState<ResponseMap>({});
 
@@ -53,21 +57,21 @@ export const createClearDomains = (
   domains: Record<string, string[]>,
   setResponses: Dispatch<SetStateAction<ResponseMap>>
 ): TippleContext['clearDomains'] => targetDomains =>
-    targetDomains.forEach(domain => {
-      if (domains[domain] === undefined) {
-        return;
-      }
+  targetDomains.forEach(domain => {
+    if (domains[domain] === undefined) {
+      return;
+    }
 
-      setResponses(responsesState =>
-        domains[domain].reduce(
-          (p, d) => ({
-            ...p,
-            [d]: {
-              ...p[d],
-              refetch: true,
-            },
-          }),
-          responsesState
-        )
-      );
-    });
+    setResponses(responsesState =>
+      domains[domain].reduce(
+        (p, d) => ({
+          ...p,
+          [d]: {
+            ...p[d],
+            refetch: true,
+          },
+        }),
+        responsesState
+      )
+    );
+  });

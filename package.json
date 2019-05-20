@@ -20,6 +20,7 @@
     "build": "microbundle build",
     "test": "jest",
     "lint": "eslint src/**/*",
+    "prettier-check": "prettier -c src/** docs/** README.md",
     "prepack": "npm run lint && npm run test && npm run build"
   },
   "repository": {
