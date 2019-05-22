@@ -30,33 +30,43 @@ export const useFetch = <T = any, D extends string = string>(
   );
   const [error, setError] = useState<Error | undefined>(undefined);
 
+  let inFlight: string[] = [];
+
   /** Executes fetching of data. */
   const doFetch = useCallback(async () => {
     setFetching(true);
 
-    try {
-      const response = await executeRequest(
-        `${opts.baseUrl || config.baseUrl || ''}${url}`,
-        {
+    const urlToFetch = `${opts.baseUrl || config.baseUrl || ''}${url}`;
+
+    const isInFlight = inFlight.find(element => element === urlToFetch);
+
+    if (!isInFlight) {
+      inFlight.push(urlToFetch);
+      try {
+        const response = await executeRequest(urlToFetch, {
           ...mergeFetchOptions(config.fetchOptions, opts.fetchOptions),
           method: 'GET',
-        }
-      );
-
-      // Sharing with cache
-      if (opts.cachePolicy !== 'network-only') {
-        addResponse({
-          data: response,
-          key,
-          domains: opts.domains,
         });
-      }
 
-      setFetching(false);
-      setData(response);
-    } catch (error) {
-      setFetching(false);
-      setError(error);
+        const indexOfFetchedRequest = inFlight.indexOf(urlToFetch);
+
+        inFlight.splice(indexOfFetchedRequest, 1);
+
+        // Sharing with cache
+        if (opts.cachePolicy !== 'network-only') {
+          addResponse({
+            data: response,
+            key,
+            domains: opts.domains,
+          });
+        }
+
+        setFetching(false);
+        setData(response);
+      } catch (error) {
+        setFetching(false);
+        setError(error);
+      }
     }
   }, [config.baseUrl, JSON.stringify(opts), url, addResponse]);
 
