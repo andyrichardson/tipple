@@ -171,11 +171,13 @@ describe('on fetched', () => {
 
     it('is called', async () => {
       instance.update(<Fixture />);
-      expect(parseResponse).toBeCalledWith(responses[key].data);
+      await waitForAsync();
+      expect(parseResponse).toBeCalledTimes(1);
     });
 
-    it('returns data value', () => {
+    it('returns data value', async () => {
       instance.update(<Fixture />);
+      await waitForAsync();
       expect(state.data).toEqual(parseResponse());
     });
   });

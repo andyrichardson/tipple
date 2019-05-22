@@ -79,11 +79,7 @@ export const useFetch = <T = any, D extends string = string>(
       return;
     }
 
-    setResponseData(
-      opts.parseResponse !== undefined
-        ? opts.parseResponse(cacheState.data)
-        : cacheState.data
-    );
+    setResponseData(cacheState.data);
   }, [responseData, opts.cachePolicy, cacheState.data]);
 
   /** On mount. */
