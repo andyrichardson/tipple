@@ -161,6 +161,26 @@ describe('on fetched', () => {
     await waitForAsync();
     expect(state.data).toEqual(response);
   });
+
+  describe('parseResponse', () => {
+    const parseResponse = jest.fn().mockReturnValue('sample value');
+
+    beforeEach(() => {
+      opts.parseResponse = parseResponse;
+    });
+
+    it('is called', async () => {
+      instance.update(<Fixture />);
+      await waitForAsync();
+      expect(parseResponse).toBeCalledTimes(1);
+    });
+
+    it('returns data value', async () => {
+      instance.update(<Fixture />);
+      await waitForAsync();
+      expect(state.data).toEqual(parseResponse());
+    });
+  });
 });
 
 describe('on error', () => {
