@@ -4,29 +4,39 @@ import { ContextConfig } from './context';
 export const getKey = (url: string, fetchArgs: RequestInit) =>
   `${url}+${fetchArgs.body !== undefined ? fetchArgs.body : ''}`;
 
-interface inFlightInteface {
-  [url: string]: Promise<object>;
-}
-
-let inFlight: inFlightInteface = {};
+/** Collection of inflight GET requests. */
+const inFlight: Record<string, any> = {};
 
 /** Executes API call and throws when response is invalid. */
 export const executeRequest = async (url: string, fetchArgs: RequestInit) => {
-  let response;
+  // Exclude push requests from deduping
+  if (fetchArgs.method !== undefined && fetchArgs.method !== 'GET') {
+    return fetchAndParse(url, fetchArgs);
+  }
 
   const isInFlight = inFlight[url] !== undefined;
+  const response = isInFlight
+    ? inFlight[url]
+    : (inFlight[url] = fetchAndParse(url, fetchArgs));
 
-  if (isInFlight) {
-    response = inFlight[url];
-  } else {
-    response = fetchAndParseRequest(url, fetchArgs);
-    inFlight[url] = response;
-
+  if (!isInFlight) {
     const cleanup = () => delete inFlight[url];
     response.then(cleanup).catch(cleanup);
   }
 
   return response;
+};
+
+/** Fetch data and parse json. */
+const fetchAndParse = async (url: string, fetchArgs: RequestInit) => {
+  const response = await fetch(url, fetchArgs);
+  const json = await response.json();
+
+  if (!response.ok) {
+    throw json;
+  }
+
+  return json;
 };
 
 /** Join hook fetchOptions with global config. */
@@ -44,15 +54,3 @@ export const mergeFetchOptions = (
             ? clientOptions.headers
             : { ...contextOptions.headers, ...clientOptions.headers },
       };
-
-const fetchAndParseRequest = async (url: string, fetchArgs: RequestInit) => {
-  const response = await fetch(url, fetchArgs);
-
-  const json = await response.json();
-
-  if (!response.ok) {
-    throw json;
-  }
-
-  return json;
-};

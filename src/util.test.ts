@@ -1,4 +1,7 @@
-import { getKey, mergeFetchOptions } from './util';
+import { mocked } from 'ts-jest/utils';
+import { getKey, mergeFetchOptions, executeRequest } from './util';
+
+beforeAll(() => Object.defineProperty(global, 'fetch', { value: jest.fn() }));
 
 beforeEach(jest.clearAllMocks);
 
@@ -14,6 +17,72 @@ describe('get key', () => {
     expect(getKey(url, fetchArgs)).toMatchInlineSnapshot(
       `"http://host:port/route+{\\"test\\":1234}"`
     );
+  });
+});
+
+describe('executeRequest', () => {
+  const url = '1234';
+  const fetchOptions = { method: 'GET' };
+  const response = { data: 'example data' };
+  const json = jest.fn();
+
+  beforeEach(() => {
+    mocked(fetch as any).mockReturnValue(
+      Promise.resolve({
+        ok: true,
+        json: json.mockReturnValue(Promise.resolve(response)),
+      })
+    );
+  });
+
+  it('calls fetch', async () => {
+    await executeRequest(url, fetchOptions);
+    expect(fetch).toBeCalledTimes(1);
+    expect(fetch).toBeCalledWith(url, fetchOptions);
+  });
+
+  describe('on success', () => {
+    it('returns success response from fetch', async () => {
+      expect(await executeRequest(url, fetchOptions)).toEqual(response);
+    });
+  });
+
+  describe('on fail', () => {
+    it('throws failure response from fetch', () => {
+      mocked(fetch as any).mockReturnValueOnce(
+        Promise.resolve({ ok: false, json })
+      );
+      return executeRequest(url, fetchOptions)
+        .then(fail)
+        .catch(e => expect(e).toEqual(response));
+    });
+  });
+
+  describe('on multiple GET requests', () => {
+    it('dedupes in flight fetch requests', async () => {
+      await Promise.all(
+        new Array(10).fill(0).map(() => executeRequest(url, fetchOptions))
+      );
+      expect(fetch).toBeCalledTimes(1);
+    });
+
+    it('re-calls fetch requests not in flight', async () => {
+      await executeRequest(url, fetchOptions);
+      await executeRequest(url, fetchOptions);
+      expect(fetch).toBeCalledTimes(2);
+    });
+  });
+
+  describe('on multiple push requests', () => {
+    it("doesn't dedupe in flight requests", async () => {
+      const count = 10;
+      await Promise.all(
+        new Array(count)
+          .fill(0)
+          .map(() => executeRequest(url, { method: 'POST' }))
+      );
+      expect(fetch).toBeCalledTimes(count);
+    });
   });
 });
 
