@@ -34,7 +34,11 @@ export const Users: FC = () => {
 
 ### Type arguments
 
-Type arguments are optional and can be used to specify the type of data being returned (assuming a successful request) and the valid domains which can be specified.
+Type arguments are optional but advised.
+
+`T`: The type of data being returned from the hook assuming a successful response.
+
+`D`: The valid domains which can be passed to the `domains` argument.
 
 ### Arguments
 
@@ -63,13 +67,19 @@ The way in which data is retrieved from the cache or network:
 
 Whether the fetch should be triggered on initial mount (defaults to true).
 
-##### baseUrl
-
-An optional baseUrl which overrides the default given to the provider.
-
 ##### fetchOptions
 
 The [fetch 'init' argument](https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch) for the request. This can override globally configured options.
+
+##### parseResponse
+
+Expects a function which recieves the API response and returns a parsed value of type `T`.
+
+> Note: The argument to the parser should be casted in order to ensure type safety (e.g. `parseResponse: (arg: ApiResponse) => arg[0]`).
+
+##### baseUrl
+
+An optional baseUrl which overrides the default given to the provider.
 
 ### Response
 
@@ -153,7 +163,7 @@ The endpoint URL (as [described for useFetch](#Arguments)).
 
 #### Additional options
 
-All the arguments for `usePush` are identical to that of `useFetch` with the exception of `cachePolicy` and `onMount`.
+All the arguments for `usePush` are identical to that of `useFetch` with the exception of `cachePolicy`, `onMount` and `parseResponse`.
 
 ### Response
 

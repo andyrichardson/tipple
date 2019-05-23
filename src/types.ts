@@ -5,36 +5,37 @@ export type CachePolicy =
   | 'network-only';
 
 /** Use fetch options shared across all configs. */
-export interface BaseUseFetchOptions<D extends string = string> {
-  onMount?: boolean;
-  fetchOptions?: RequestInit;
-  baseUrl?: string;
+export interface BaseUseFetchOptions<D extends string = string, T = any> {
   domains: D[];
+  onMount?: boolean;
+  parseResponse?: (response: any) => T;
+  baseUrl?: string;
+  fetchOptions?: RequestInit;
 }
 
 /** Default useFetch options. */
-export interface GeneralUseFetchOptions<D extends string = string>
-  extends BaseUseFetchOptions<D> {
+export interface GeneralUseFetchOptions<D extends string = string, T = any>
+  extends BaseUseFetchOptions<D, T> {
   cachePolicy?: Exclude<CachePolicy, 'network-only' | 'cache-only'>;
 }
 
 /** useFetch options without domain (for network-only). */
-export interface NetworkOnlyUseFetchOptions
-  extends Omit<BaseUseFetchOptions, 'domains'> {
+export interface NetworkOnlyUseFetchOptions<T>
+  extends Omit<BaseUseFetchOptions<never, T>, 'domains'> {
   cachePolicy: 'network-only';
 }
 
 /** useFetch options without onMount option (for cache-only). */
-export interface CacheOnlyUseFetchOptions<D extends string>
-  extends Omit<BaseUseFetchOptions<D>, 'onMount'> {
+export interface CacheOnlyUseFetchOptions<D extends string, T = any>
+  extends Omit<BaseUseFetchOptions<D, T>, 'onMount'> {
   cachePolicy: 'cache-only';
 }
 
 /** Config options for useFetch. */
-export type UseFetchOptions<D extends string = string> =
-  | GeneralUseFetchOptions<D>
-  | NetworkOnlyUseFetchOptions
-  | CacheOnlyUseFetchOptions<D>;
+export type UseFetchOptions<D extends string = string, T = any> =
+  | GeneralUseFetchOptions<D, T>
+  | NetworkOnlyUseFetchOptions<T>
+  | CacheOnlyUseFetchOptions<D, T>;
 
 /** Network information returned from useFetch. */
 export interface FetchState<T = any> {
@@ -49,7 +50,7 @@ export type UseFetchResponse<T = any> = [FetchState<T>, () => void];
 /** Re-export utility type for enforcing domain. */
 export type TypedUseFetch<D extends string> = <T extends any>(
   url: string,
-  opts: UseFetchOptions<D>
+  opts: UseFetchOptions<D, T>
 ) => UseFetchResponse<T>;
 
 /** Map of domain strings pointing to request keys */

@@ -6,7 +6,7 @@ import { UseFetchOptions, UseFetchResponse } from './types';
 /** Hook for executing fetch requests (GET). */
 export const useFetch = <T = any, D extends string = string>(
   url: string,
-  opts: UseFetchOptions<D>
+  opts: UseFetchOptions<D, T>
 ): UseFetchResponse<T> => {
   /** Unique identifier of request. */
   const key = useMemo(() => getKey(url, opts.fetchOptions || {}), [
@@ -23,7 +23,7 @@ export const useFetch = <T = any, D extends string = string>(
   const [fetching, setFetching] = useState<boolean>(
     opts.cachePolicy !== 'cache-only' && opts.onMount !== false
   );
-  const [data, setData] = useState<T | undefined>(
+  const [responseData, setResponseData] = useState<T | undefined>(
     opts.cachePolicy !== 'network-only' && opts.cachePolicy !== 'network-first'
       ? cacheState.data
       : undefined
@@ -62,7 +62,7 @@ export const useFetch = <T = any, D extends string = string>(
         }
 
         setFetching(false);
-        setData(response);
+        setResponseData(response);
       } catch (error) {
         setFetching(false);
         setError(error);
@@ -75,7 +75,7 @@ export const useFetch = <T = any, D extends string = string>(
     // Data from cache is unchanged
     if (
       cacheState.data === undefined &&
-      JSON.stringify(data) === JSON.stringify(cacheState.data)
+      JSON.stringify(responseData) === JSON.stringify(cacheState.data)
     ) {
       return;
     }
@@ -85,12 +85,12 @@ export const useFetch = <T = any, D extends string = string>(
     }
 
     // Initial network request is yet to complete
-    if (opts.cachePolicy === 'network-first' && data === undefined) {
+    if (opts.cachePolicy === 'network-first' && responseData === undefined) {
       return;
     }
 
-    setData(cacheState.data);
-  }, [data, opts.cachePolicy, cacheState.data]);
+    setResponseData(cacheState.data);
+  }, [responseData, opts.cachePolicy, cacheState.data]);
 
   /** On mount. */
   useEffect(() => {
@@ -113,6 +113,14 @@ export const useFetch = <T = any, D extends string = string>(
       doFetch();
     }
   }, [fetching, opts.cachePolicy, cacheState.refetch]);
+
+  const data = useMemo(
+    () =>
+      responseData !== undefined && opts.parseResponse !== undefined
+        ? opts.parseResponse(responseData)
+        : responseData,
+    [responseData]
+  );
 
   return [{ fetching, error, data }, doFetch];
 };
