@@ -1,16 +1,18 @@
 import { Layout } from 'antd';
 import React, { FC } from 'react';
-import { TippleProvider } from 'tipple';
+import { createClient, TippleProvider } from 'tipple';
 import { Posts } from './components/Posts';
 import { AddPost } from './components/AddPost';
 import './main.css';
 
+const tipple = createClient({
+  baseUrl: 'http://localhost:5000',
+  fetchOptions: { headers: { 'content-type': 'application/json' } },
+});
+
 export const App: FC = () => {
   return (
-    <TippleProvider
-      fetchOptions={{ headers: { 'content-type': 'application/json' } }}
-      baseUrl={'http://localhost:5000'}
-    >
+    <TippleProvider client={tipple}>
       <Layout.Content>
         <AddPost />
         <Posts />

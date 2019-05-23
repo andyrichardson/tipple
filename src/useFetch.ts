@@ -14,10 +14,10 @@ export const useFetch = <T = any, D extends string = string>(
     opts.fetchOptions,
   ]);
 
-  const { config, responses, addResponse } = useContext(TippleContext);
+  const { config, cache, addResponse } = useContext(TippleContext);
   const cacheState = useMemo(
-    () => responses[key] || { refetch: false, data: undefined },
-    [responses[key]]
+    () => cache[key] || { refetch: false, data: undefined },
+    [cache[key]]
   );
 
   const [fetching, setFetching] = useState<boolean>(

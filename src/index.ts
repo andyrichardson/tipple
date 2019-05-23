@@ -1,3 +1,9 @@
+export {
+  createClient,
+  TippleCache,
+  TippleClient,
+  TippleClientOptions,
+} from './client';
 export { TippleContext } from './context';
 export { Provider as TippleProvider } from './Provider';
 export { FetchState, TypedUseFetch } from './types';
