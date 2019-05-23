@@ -25,10 +25,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andyrichardson/tiny-rest.git"
+    "url": "git+https://github.com/andyrichardson/tipple.git"
   },
   "author": "Andy Richardson (andyrichardson)",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/andyrichardson/tipple/issues"
   },
