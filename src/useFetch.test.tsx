@@ -220,7 +220,7 @@ describe('on invalidation', () => {
   });
 });
 
-describe('on cache change', () => {
+describe.skip('on cache change', () => {
   let instance: renderer.ReactTestRenderer;
 
   beforeEach(() => {
