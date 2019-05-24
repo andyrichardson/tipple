@@ -1,11 +1,12 @@
 stages:
   - test
   - build
+  - deploy
 
 .base: &base
   before_script:
     - npm ci
-  image: node:11
+  image: node:12
 
 lint:
   <<: *base
@@ -33,3 +34,21 @@ build:
   stage: build
   script:
     - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 hour
+
+deploy:
+  stage: deploy
+  image: node:12
+  only:
+    - tags
+  environment:
+    name: deploy
+  variables:
+    NPM_TOKEN: $NPM_TOKEN
+  dependencies:
+    - build
+  script:
+    - npm pack
