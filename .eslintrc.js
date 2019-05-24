@@ -14,6 +14,7 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/array-type': 'array-simple',
     'react/prop-types': 'off',
   },
   settings: {
