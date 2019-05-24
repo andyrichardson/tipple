@@ -1,4 +1,4 @@
-import { ContextConfig } from './context';
+import { TippleClientOptions } from './client';
 
 /** Gets unique key of request. */
 export const getKey = (url: string, fetchArgs: RequestInit) =>
@@ -41,7 +41,7 @@ const fetchAndParse = async (url: string, fetchArgs: RequestInit) => {
 
 /** Join hook fetchOptions with global config. */
 export const mergeFetchOptions = (
-  contextOptions: ContextConfig['fetchOptions'] = o => o,
+  contextOptions: TippleClientOptions['fetchOptions'] = o => o,
   clientOptions: RequestInit = {}
 ) =>
   typeof contextOptions === 'function'
