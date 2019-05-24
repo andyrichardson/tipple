@@ -4,7 +4,7 @@ export type TippleCache<D extends string = string> = Record<
 >;
 
 export interface TippleClientOptions {
-  baseUrl: string;
+  baseUrl?: string;
   fetchOptions?: ((o: RequestInit) => RequestInit) | RequestInit;
 }
 
