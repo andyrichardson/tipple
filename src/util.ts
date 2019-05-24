@@ -27,16 +27,16 @@ export const executeRequest = async (url: string, fetchArgs: RequestInit) => {
   return response;
 };
 
-/** Fetch data and parse json. */
+/** Fetch data and parse json (if possible). */
 const fetchAndParse = async (url: string, fetchArgs: RequestInit) => {
   const response = await fetch(url, fetchArgs);
-  const json = await response.json();
+  const data = await response.json().catch(() => response);
 
   if (!response.ok) {
-    throw json;
+    throw data;
   }
 
-  return json;
+  return data;
 };
 
 /** Join hook fetchOptions with global config. */
