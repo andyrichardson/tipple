@@ -8,33 +8,36 @@ stages:
     - npm ci
   image: node:12
 
-lint:
-  <<: *base
-  stage: test
-  script:
-    - npm run lint
+# lint:
+#   <<: *base
+#   stage: test
+#   script:
+#     - npm run lint
 
-formatting:
-  <<: *base
-  stage: test
-  script:
-    - npm run prettier-check
+# formatting:
+#   <<: *base
+#   stage: test
+#   script:
+#     - npm run prettier-check
 
-test:
-  <<: *base
-  stage: test
-  variables:
-    CODECOV_TOKEN: $CODECOV_TOKEN
-  script:
-    - npm run test -- --coverage
-    - npx codecov
+# test:
+#   <<: *base
+#   stage: test
+#   variables:
+#     CODECOV_TOKEN: $CODECOV_TOKEN
+#   script:
+#     - npm run test -- --coverage
+#     - npx codecov
 
 build:
   <<: *base
   stage: build
   script:
     - npm run build
+    - sleep 20
+    - ls 
   artifacts:
+    untracked: true
     paths:
       - dist/
     expire_in: 1 hour
