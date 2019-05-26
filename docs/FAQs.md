@@ -2,8 +2,6 @@
 
 ## Why should I use Tipple?
 
-Because it's simple and scalable.
-
 Re-implementing backend logic on the front end is currently the standard when working with REST. If you need the efficiency of fewer API calls and can deal with the consequences of additional complexity and redundancy, go for it. For everyone else, there's now an alternative that, up until this point, hasn't been around.
 
 ## Is this another fetching library?
