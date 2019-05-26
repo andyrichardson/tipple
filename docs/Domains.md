@@ -26,7 +26,7 @@ addComment(); // This will cause the request in the first example to be refetche
 
 ### Manual domain invalidation
 
-For times where we want to invalidate a domain outside of the _usePush_ hook (such as when receiving updates over websockets), the client has a _clearDomains_ function.
+For times where we want to invalidate a domain outside of the _usePush_ hook (such as when receiving updates over a websocket), the client has a _clearDomains_ function.
 
 ```tsx
   import { TippleContext } from 'tipple';
