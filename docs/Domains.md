@@ -1,7 +1,5 @@
 # Domains
 
-### Domains in Tipple
-
 Domains are the way in which we determine the type of data we're working with in a request. Think of it as the key data types of your data model (e.g. Users, Posts, Comments, etc).
 
 ### Specifying a domain with useFetch
@@ -26,40 +24,19 @@ addComment(); // This will cause the request in the first example to be refetche
 
 > Note: A 'push' refers to any request where data in the target domain is being changed (in other words, anything which is not a GET request).
 
-### Type safe domains
+### Manual domain invalidation
 
-For consistency across your codebase, it is strongly recommended that you type your domains. Typed domains can be specified when calling useFetch as demonstrated below.
-
-```tsx
-type ValidDomain = 'posts' | 'comments' | 'users';
-
-// This is type safe
-const [response, refetch] = useFetch<ResponseType, ValidDomain>('/comments', {
-  domains: ['comments'],
-});
-
-// This will throw an error
-const [response, refetch] = useFetch<ResponseType, ValidDomain>('/comments', {
-  domains: ['alerts'],
-});
-```
-
-To force domain type safety throughout your application, you can proxy the _useFetch_ and _usePush_ hooks.
+For times where we want to invalidate a domain outside of the _usePush_ hook (such as when receiving updates over a websocket), the client has a _clearDomains_ function.
 
 ```tsx
-// src/utils.ts
-import { useFetch as useFetchOriginal, usePush as usePushOriginal TypedUseFetch, TypedUsePush } from 'tipple';
+import { TippleContext } from 'tipple';
 
-type Domain = 'posts' | 'comments' | 'users';
+const MyComponent = () => {
+  // Retrieve the client from inside a component
+  const client = useContext(TippleContext);
 
-export const useFetch = useFetchOriginal as TypedUseFetch<Domain>;
-export const usePush = usePushOriginal as TypedUsePush<Domain>;
+  //..
 
-// src/components/Home.tsx
-import { useFetch } from '../utils';
-
-//..
-
-// Type error ('post' not in type Domain)
-const [response, refetch] = useFetch('/comments', { domains: ['post'] });
+  notificationStream.subscribe(() => client.clearDomains(['notifications']));
+};
 ```
