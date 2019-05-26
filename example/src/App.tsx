@@ -7,7 +7,7 @@ import './main.css';
 
 const tipple = createClient({
   baseUrl: 'http://localhost:5000',
-  fetchOptions: { headers: { 'content-type': 'application/json' } },
+  fetchOptions: { headers: { 'Content-Type': 'application/json' } },
 });
 
 export const App: FC = () => {
@@ -20,3 +20,4 @@ export const App: FC = () => {
     </TippleProvider>
   );
 };
+

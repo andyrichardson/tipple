@@ -15,6 +15,9 @@ A lightweight dependency-free library for fetching data over REST in React.
   <a href="https://bundlephobia.com/result?p=tipple">
     <img src="https://img.shields.io/bundlephobia/minzip/tipple.svg" alt="size" />
   </a>
+  <a href="https://github.com/andyrichardson/tipple/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/tipple.svg" alt="licence">
+  </a>
 </p>
 
 ## What is Tipple?
@@ -27,7 +30,7 @@ If you're working with REST and want an easy way to manage data fetching on the 
 
 There's two key parts to Tipple:
 
-1.  Request state managment - _a fancy way of saying Tipple will manage the numerous states of your API calls so you don't have to._
+1.  Request state management - _a fancy way of saying Tipple will manage the numerous states of your API calls so you don't have to._
 2.  Domain based integrity - _because each request is tied to a domain (e.g. users, posts, comments), Tipple can force data to be re-fetched whenever [domain(s)](/docs/Domains.md) have been mutated._
 
 ## Getting started
@@ -42,14 +45,16 @@ npm i tipple
 
 ### Configure the context
 
-Tipple uses React's context to store the responses and integrity states of requests. You'll want to put the provider in the root of your project.
+Tipple exposes the client using React's context. You'll want to put the provider in the root of your project in order to use the _useFetch_ and _usePush_ hooks.
 
 ```tsx
-import { TippleProvider } from 'tipple';
+import { createClient, TippleProvider } from 'tipple';
 import { AppContent } from './AppContent';
 
+const client = createClient({ baseUrl: 'http://localhost:1234/api' });
+
 export const App = () => (
-  <TippleProvider baseUrl="http://host:1234">
+  <TippleProvider client={client}>
     <AppContent />
   </TippleProvider>
 );
