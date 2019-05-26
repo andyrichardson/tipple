@@ -31,7 +31,7 @@ Here are a few configurable options which you will want to make use of.
 
 #### baseUrl
 
-This is the endpoint for your REST API. This will be prefixed to all URLs passed to the _useFetch_ and _usePush_ hooks.
+This is the endpoint for your REST API. It will be prefixed to all URLs passed to the _useFetch_ and _usePush_ hooks.
 
 > Note: for consistency, it's best to avoid suffixing your baseUrl with a forward slash.
 
