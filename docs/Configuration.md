@@ -37,7 +37,7 @@ This is the endpoint for your REST API. It will be prefixed to all URLs passed t
 
 #### fetchOptions
 
-Here you can specify any default fetchOptions for API calls. This is often useful for specifying default request headers or for authorization purposes. These defaults can be overridden by the fetchOptions specified in the _useFetch_ and _usePush_ hooks.
+Here you can set any default fetchOptions for API calls (useful for injecting authentication headers). These defaults will ben merged with any fetchOptions specified in the _useFetch_ and _usePush_ hooks.
 
 > Note: `fetchOptions` can also be a function. If this is the case, it will be called with the `fetchOptions` value that was passed to the requesting hook.
 
