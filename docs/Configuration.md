@@ -40,3 +40,41 @@ This is the endpoint for your REST API. This will be prefixed to all URLs passed
 Here you can specify any default fetchOptions for API calls. This is often useful for specifying default request headers or for authorization purposes. These defaults can be overridden by the fetchOptions specified in the _useFetch_ and _usePush_ hooks.
 
 > Note: `fetchOptions` can also be a function. If this is the case, it will be called with the `fetchOptions` value that was passed to the requesting hook.
+
+## Type safe domains
+
+For consistency across your codebase, it is strongly recommended that you type your domains. Typed domains can be specified when calling useFetch as demonstrated below.
+
+```tsx
+type ValidDomain = 'posts' | 'comments' | 'users';
+
+// This is type safe
+const [response, refetch] = useFetch<ResponseType, ValidDomain>('/comments', {
+  domains: ['comments'],
+});
+
+// This will throw an error
+const [response, refetch] = useFetch<ResponseType, ValidDomain>('/comments', {
+  domains: ['alerts'],
+});
+```
+
+To force domain type safety throughout your application, you can proxy the _useFetch_ and _usePush_ hooks.
+
+```tsx
+// src/utils.ts
+import { useFetch as useFetchOriginal, usePush as usePushOriginal TypedUseFetch, TypedUsePush } from 'tipple';
+
+type Domain = 'posts' | 'comments' | 'users';
+
+export const useFetch = useFetchOriginal as TypedUseFetch<Domain>;
+export const usePush = usePushOriginal as TypedUsePush<Domain>;
+
+// src/components/Home.tsx
+import { useFetch } from '../utils';
+
+//..
+
+// Type error ('post' not in type Domain)
+const [response, refetch] = useFetch('/comments', { domains: ['post'] });
+```
