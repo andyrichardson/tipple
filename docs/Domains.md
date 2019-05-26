@@ -29,14 +29,14 @@ addComment(); // This will cause the request in the first example to be refetche
 For times where we want to invalidate a domain outside of the _usePush_ hook (such as when receiving updates over a websocket), the client has a _clearDomains_ function.
 
 ```tsx
-  import { TippleContext } from 'tipple';
+import { TippleContext } from 'tipple';
 
-  const MyComponent = () => {
-    // Retrieve the client from inside a component
-    const client = useContext(TippleContext);
+const MyComponent = () => {
+  // Retrieve the client from inside a component
+  const client = useContext(TippleContext);
 
-    //.. 
+  //..
 
-    notificationStream.subscribe(() => client.clearDomains(['notifications']));
-  }
+  notificationStream.subscribe(() => client.clearDomains(['notifications']));
+};
 ```

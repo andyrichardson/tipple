@@ -11,9 +11,9 @@ import React, { FC } from 'react';
 import { createClient, TippleProvider } from 'tipple';
 import { HomePage } from './Home';
 
-const client = createClient({ 
-  baseUrl: 'http://localhost:5000/api', 
-  fetchOptions: { 
+const client = createClient({
+  baseUrl: 'http://localhost:5000/api',
+  fetchOptions: {
     headers: { 'Content-Type': 'application/json' }
   }
 });
