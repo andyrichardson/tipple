@@ -1,7 +1,5 @@
 # Domains
 
-## Domains in Tipple
-
 Domains are the way in which we determine the type of data we're working with in a request. Think of it as the key data types of your data model (e.g. Users, Posts, Comments, etc).
 
 ### Specifying a domain with useFetch

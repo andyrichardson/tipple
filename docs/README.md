@@ -19,3 +19,9 @@ _Setting up and configuring Tipple for use throughout your app._
 ## [Hooks](./Hooks.md)
 
 _Executing REST requests (fetches and pushes)._
+
+<br>
+
+## [FAQs](./FAQs.md)
+
+_Frequently asked questions._
