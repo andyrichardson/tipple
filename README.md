@@ -15,6 +15,9 @@ A lightweight dependency-free library for fetching data over REST in React.
   <a href="https://bundlephobia.com/result?p=tipple">
     <img src="https://img.shields.io/bundlephobia/minzip/tipple.svg" alt="size" />
   </a>
+  <a href="https://github.com/andyrichardson/tipple/blob/master/LICENSE">
+    <img src="https://img.shields.io/npm/l/tipple.svg" alt="licence">
+  </a>
 </p>
 
 ## What is Tipple?
