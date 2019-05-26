@@ -42,14 +42,16 @@ npm i tipple
 
 ### Configure the context
 
-Tipple uses React's context to store the responses and integrity states of requests. You'll want to put the provider in the root of your project.
+Tipple exposes the client using React's context. You'll want to put the provider in the root of your project in order to use the _useFetch_ and _usePush_ hooks.
 
 ```tsx
-import { TippleProvider } from 'tipple';
+import { createClient, TippleProvider } from 'tipple';
 import { AppContent } from './AppContent';
 
+const client = createClient({ baseUrl: 'http://localhost:1234/api' });
+
 export const App = () => (
-  <TippleProvider baseUrl="http://host:1234">
+  <TippleProvider client={client}>
     <AppContent />
   </TippleProvider>
 );
