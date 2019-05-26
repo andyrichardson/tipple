@@ -27,7 +27,7 @@ If you're working with REST and want an easy way to manage data fetching on the 
 
 There's two key parts to Tipple:
 
-1.  Request state managment - _a fancy way of saying Tipple will manage the numerous states of your API calls so you don't have to._
+1.  Request state management - _a fancy way of saying Tipple will manage the numerous states of your API calls so you don't have to._
 2.  Domain based integrity - _because each request is tied to a domain (e.g. users, posts, comments), Tipple can force data to be re-fetched whenever [domain(s)](/docs/Domains.md) have been mutated._
 
 ## Getting started
