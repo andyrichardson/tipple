@@ -19,6 +19,15 @@ export const AddPost = () => {
     setBody({ author: 'user', title: '' });
   }
 
+  const handleKeyDown = useCallback(
+    event => {
+      if (event.key === 'Enter') {
+        addPost();
+      }
+    },
+    [addPost]
+  );
+
   return (
     <Row>
       <Card>
@@ -28,6 +37,7 @@ export const AddPost = () => {
               placeholder={'Enter a post'}
               value={body.title}
               onChange={handleInput}
+              onKeyDown={handleKeyDown}
             />
           </Col>
           <Col span={5}>
