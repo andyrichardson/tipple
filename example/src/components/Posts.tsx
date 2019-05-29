@@ -22,7 +22,7 @@ export const Posts: FC = () => {
 
   return (
     <>
-      {posts.data.map(post => (
+      {posts.data.slice().reverse().map(post => (
         <Post key={post.id} post={post} />
       ))}
       <Button onClick={refetch}>Refetch</Button>
