@@ -17,3 +17,4 @@ export const Provider: FC<{ client: TippleClient }> = ({
     </TippleContext.Provider>
   );
 };
+Provider.displayName = 'TippleProvider';
