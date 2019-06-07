@@ -20,7 +20,7 @@ export interface TippleClient<D extends string = string> {
 }
 
 export const createClient = <D extends string = string>(
-  config?: TippleClientOptions = {}
+  config: TippleClientOptions = {}
 ): TippleClient<D> => {
   let cache: TippleCache<D> = {};
   let cacheWatchers: Array<(c: typeof cache) => void> = [];
