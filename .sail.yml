@@ -1,0 +1,40 @@
+workflow:  
+  - install
+  - sail:parallel:
+    - formatting
+    - lint
+    - test
+  - build
+
+tasks:
+  install: &base
+    image: node:11
+    command:
+      - npm
+    args:
+      - i
+      - --ci
+     
+  formatting:
+    <<: *base
+    args:
+      - run
+      - prettier-check
+      
+  lint:
+    <<: *base
+    args:
+      - run
+      - lint
+      
+  test:
+    <<: *base
+    args:
+      - run
+      - test
+
+  build:
+    <<: *base
+    args:
+      - run
+      - build
