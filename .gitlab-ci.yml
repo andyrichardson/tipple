@@ -1,54 +1,27 @@
 stages:
-  - test
   - build
-  - deploy
 
-.base: &base
-  before_script:
-    - npm ci
-  image: node:12
+variables:
+  DOCKER_HOST: tcp://asdaddocker:2375/
+  DOCKER_DRIVER: overlay2
 
-lint:
-  <<: *base
-  stage: test
-  script:
-    - npm run lint
+services:
+  - docker:dind
 
-formatting:
-  <<: *base
-  stage: test
-  script:
-    - npm run prettier-check
-
-test:
-  <<: *base
-  stage: test
-  variables:
-    CODECOV_TOKEN: $CODECOV_TOKEN
-  script:
-    - npm run test -- --coverage
-    - npx codecov
-
-build:
-  <<: *base
+dockerinfo:
+  image: docker:stable
   stage: build
   script:
+    - docker info
+
+build:
+  image: node:latest
+  stage: build
+  script:
+    - npm i
     - npm run build
   artifacts:
     paths:
       - dist/
     expire_in: 1 hour
 
-deploy:
-  stage: deploy
-  image: node:12
-  only:
-    - tags
-  environment:
-    name: deploy
-  variables:
-    NPM_TOKEN: $NPM_TOKEN
-  dependencies:
-    - build
-  script:
-    - npm pack
