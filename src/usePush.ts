@@ -1,6 +1,7 @@
 import { useContext, useCallback, useState } from 'react';
 import { TippleContext } from './context';
 import { executeRequest, mergeFetchOptions } from './util';
+import { ExecuteRequestOptions } from './types';
 
 export type TypedUsePush<D extends string> = <T extends any>(
   url: string,
@@ -31,15 +32,15 @@ export const usePush = <T = any, D extends string = string>(
   const [state, setState] = useState<PushState<T>>({ fetching: false });
 
   /** Executes fetching of data. */
-  const doFetch = useCallback(async () => {
+  const doFetch = useCallback(async (overrides: ExecuteRequestOptions = {}) => {
     setState({ ...state, fetching: true });
 
     try {
       const response = await executeRequest(
-        `${opts.baseUrl || config.baseUrl || ''}${url}`,
+        `${overrides.baseUrl || opts.baseUrl || config.baseUrl || ''}${url}`,
         {
           method: 'POST',
-          ...mergeFetchOptions(config.fetchOptions, opts.fetchOptions),
+          ...mergeFetchOptions(config.fetchOptions, opts.fetchOptions, overrides.fetchOptions),
         }
       );
 

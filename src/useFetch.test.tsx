@@ -30,13 +30,13 @@ let opts: Parameters<typeof useFetch>[1] = { domains: ['any'] };
 
 // Hook results
 let state: FetchState;
-let refetch: () => void;
+let manualFetch: (args?: any) => void;
 
 const HookFixture: FC = () => {
   const [a, b] = useFetch(url, opts);
 
   state = a;
-  refetch = b;
+  manualFetch = b;
 
   return null;
 };
@@ -135,6 +135,35 @@ describe('on init', () => {
     });
   });
 });
+
+describe("on manual fetch", () => {
+  let instance: renderer.ReactTestRenderer;
+
+  beforeEach(() => {
+    instance = renderer.create(<Fixture />);
+  });
+
+  afterEach(() => instance.unmount());
+
+  it('calls executeRequest', () => {
+    manualFetch();
+    expect(executeRequest).toBeCalledWith(`${config.baseUrl}${url}`, {
+      method: 'GET',
+      ...config.fetchOptions,
+      ...opts.fetchOptions,
+    });
+  });
+
+  it('calls executeRequest with override options', () => {
+    const override = { baseUrl: 'http://override', fetchOptions: { headers: { 'some-header': 'somevalue' } }};
+    manualFetch(override);
+    expect(executeRequest).toBeCalledWith(`${override.baseUrl}${url}`, {
+      method: 'GET',
+      ...config.fetchOptions,
+      ...override.fetchOptions,
+    });
+  });
+})
 
 describe('on fetched', () => {
   let instance: renderer.ReactTestRenderer;

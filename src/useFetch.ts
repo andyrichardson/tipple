@@ -1,7 +1,7 @@
 import { useContext, useCallback, useState, useEffect, useMemo } from 'react';
 import { TippleContext } from './context';
 import { executeRequest, getKey, mergeFetchOptions } from './util';
-import { UseFetchOptions, UseFetchResponse } from './types';
+import { UseFetchOptions, UseFetchResponse, ExecuteRequestOptions } from './types';
 
 /** Hook for executing fetch requests (GET). */
 export const useFetch = <T = any, D extends string = string>(
@@ -31,14 +31,14 @@ export const useFetch = <T = any, D extends string = string>(
   const [error, setError] = useState<Error | undefined>(undefined);
 
   /** Executes fetching of data. */
-  const doFetch = useCallback(async () => {
+  const doFetch = useCallback(async (overrides: ExecuteRequestOptions = {}) => {
     setFetching(true);
 
     try {
       const response = await executeRequest(
-        `${opts.baseUrl || config.baseUrl || ''}${url}`,
+        `${overrides.baseUrl || opts.baseUrl || config.baseUrl || ''}${url}`,
         {
-          ...mergeFetchOptions(config.fetchOptions, opts.fetchOptions),
+          ...mergeFetchOptions(config.fetchOptions, opts.fetchOptions,  overrides.fetchOptions),
           method: 'GET',
         }
       );
