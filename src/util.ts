@@ -47,16 +47,11 @@ export const mergeFetchOptions = (
     | [OptionalContextOptions]
     | [OptionalContextOptions, OptionalRequestInit]
     | [OptionalContextOptions, OptionalRequestInit, OptionalRequestInit]
-) => {
-  if (args.length < 2) {
-    throw Error('Cannot merge less than two values');
-  }
-
-  return (args.slice(1) as RequestInit[]).reduce(
+) =>
+  (args.slice(1) as RequestInit[]).reduce(
     (prev, current) => doMergeFetchOptions(prev, current),
     args[0]
   );
-};
 
 const doMergeFetchOptions = (
   contextOptions: TippleClientOptions['fetchOptions'] = o => o,
