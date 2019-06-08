@@ -32,26 +32,33 @@ export const usePush = <T = any, D extends string = string>(
   const [state, setState] = useState<PushState<T>>({ fetching: false });
 
   /** Executes fetching of data. */
-  const doFetch = useCallback(async (overrides: ExecuteRequestOptions = {}) => {
-    setState({ ...state, fetching: true });
+  const doFetch = useCallback(
+    async (overrides: ExecuteRequestOptions = {}) => {
+      setState({ ...state, fetching: true });
 
-    try {
-      const response = await executeRequest(
-        `${overrides.baseUrl || opts.baseUrl || config.baseUrl || ''}${url}`,
-        {
-          method: 'POST',
-          ...mergeFetchOptions(config.fetchOptions, opts.fetchOptions, overrides.fetchOptions),
-        }
-      );
+      try {
+        const response = await executeRequest(
+          `${overrides.baseUrl || opts.baseUrl || config.baseUrl || ''}${url}`,
+          {
+            method: 'POST',
+            ...mergeFetchOptions(
+              config.fetchOptions,
+              opts.fetchOptions,
+              overrides.fetchOptions
+            ),
+          }
+        );
 
-      clearDomains(opts.domains);
-      setState({ fetching: false, data: response });
-      return response;
-    } catch (error) {
-      setState({ ...state, error });
-      throw error;
-    }
-  }, [state, JSON.stringify(opts)]);
+        clearDomains(opts.domains);
+        setState({ fetching: false, data: response });
+        return response;
+      } catch (error) {
+        setState({ ...state, error });
+        throw error;
+      }
+    },
+    [state, JSON.stringify(opts)]
+  );
 
   const reset = useCallback(() => setState({ fetching: false }), []);
 

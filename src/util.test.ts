@@ -96,25 +96,25 @@ describe('mergeFetchOptions', () => {
     method: 'PUT',
   };
   const overrideOptions = {
-    headers: { 'content-type': "alt" },
-    method: "GET",
-  }
+    headers: { 'content-type': 'alt' },
+    method: 'GET',
+  };
 
-  describe("hook arg", () => {
+  describe('hook arg', () => {
     it('replaces root level options', () => {
       expect(mergeFetchOptions(contextOptions, clientOptions)).toHaveProperty(
         'method',
         clientOptions.method
       );
     });
-  
+
     it('replaces headers', () => {
       expect(mergeFetchOptions(contextOptions, clientOptions)).toHaveProperty(
         'headers',
         clientOptions.headers
       );
     });
-  
+
     it('merges headers', () => {
       const altOptions = { headers: { 'some-header': '1234' } };
       expect(mergeFetchOptions(altOptions, clientOptions)).toHaveProperty(
@@ -122,32 +122,33 @@ describe('mergeFetchOptions', () => {
         { ...altOptions.headers, ...clientOptions.headers }
       );
     });
-  })
+  });
 
-  describe("execute request arg", () => {
+  describe('execute request arg', () => {
     it('replaces root level options', () => {
-      expect(mergeFetchOptions(contextOptions, clientOptions, overrideOptions)).toHaveProperty(
-        'method',
-        overrideOptions.method,
-      );
+      expect(
+        mergeFetchOptions(contextOptions, clientOptions, overrideOptions)
+      ).toHaveProperty('method', overrideOptions.method);
     });
-  
+
     it('replaces headers', () => {
-      expect(mergeFetchOptions(contextOptions, clientOptions, overrideOptions)).toHaveProperty(
-        'headers',
-        overrideOptions.headers
-      );
+      expect(
+        mergeFetchOptions(contextOptions, clientOptions, overrideOptions)
+      ).toHaveProperty('headers', overrideOptions.headers);
     });
-  
+
     it('merges headers', () => {
       const altOptions = { headers: { 'some-header': '1234' } };
       const additionalOptions = { headers: { 'another-header': 'value' } };
-      expect(mergeFetchOptions(altOptions, clientOptions, additionalOptions)).toHaveProperty(
-        'headers',
-        { ...altOptions.headers, ...clientOptions.headers, ...additionalOptions.headers }
-      );
+      expect(
+        mergeFetchOptions(altOptions, clientOptions, additionalOptions)
+      ).toHaveProperty('headers', {
+        ...altOptions.headers,
+        ...clientOptions.headers,
+        ...additionalOptions.headers,
+      });
     });
-  })
+  });
 
   describe('context function', () => {
     const fn = jest.fn();

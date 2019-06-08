@@ -136,7 +136,7 @@ describe('on init', () => {
   });
 });
 
-describe("on manual fetch", () => {
+describe('on manual fetch', () => {
   let instance: renderer.ReactTestRenderer;
 
   beforeEach(() => {
@@ -155,7 +155,10 @@ describe("on manual fetch", () => {
   });
 
   it('calls executeRequest with override options', () => {
-    const override = { baseUrl: 'http://override', fetchOptions: { headers: { 'some-header': 'somevalue' } }};
+    const override = {
+      baseUrl: 'http://override',
+      fetchOptions: { headers: { 'some-header': 'somevalue' } },
+    };
     manualFetch(override);
     expect(executeRequest).toBeCalledWith(`${override.baseUrl}${url}`, {
       method: 'GET',
@@ -163,7 +166,7 @@ describe("on manual fetch", () => {
       ...override.fetchOptions,
     });
   });
-})
+});
 
 describe('on fetched', () => {
   let instance: renderer.ReactTestRenderer;

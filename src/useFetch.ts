@@ -1,7 +1,11 @@
 import { useContext, useCallback, useState, useEffect, useMemo } from 'react';
 import { TippleContext } from './context';
 import { executeRequest, getKey, mergeFetchOptions } from './util';
-import { UseFetchOptions, UseFetchResponse, ExecuteRequestOptions } from './types';
+import {
+  UseFetchOptions,
+  UseFetchResponse,
+  ExecuteRequestOptions,
+} from './types';
 
 /** Hook for executing fetch requests (GET). */
 export const useFetch = <T = any, D extends string = string>(
@@ -31,34 +35,41 @@ export const useFetch = <T = any, D extends string = string>(
   const [error, setError] = useState<Error | undefined>(undefined);
 
   /** Executes fetching of data. */
-  const doFetch = useCallback(async (overrides: ExecuteRequestOptions = {}) => {
-    setFetching(true);
+  const doFetch = useCallback(
+    async (overrides: ExecuteRequestOptions = {}) => {
+      setFetching(true);
 
-    try {
-      const response = await executeRequest(
-        `${overrides.baseUrl || opts.baseUrl || config.baseUrl || ''}${url}`,
-        {
-          ...mergeFetchOptions(config.fetchOptions, opts.fetchOptions,  overrides.fetchOptions),
-          method: 'GET',
+      try {
+        const response = await executeRequest(
+          `${overrides.baseUrl || opts.baseUrl || config.baseUrl || ''}${url}`,
+          {
+            ...mergeFetchOptions(
+              config.fetchOptions,
+              opts.fetchOptions,
+              overrides.fetchOptions
+            ),
+            method: 'GET',
+          }
+        );
+
+        // Sharing with cache
+        if (opts.cachePolicy !== 'network-only') {
+          addResponse({
+            data: response,
+            key,
+            domains: opts.domains,
+          });
         }
-      );
 
-      // Sharing with cache
-      if (opts.cachePolicy !== 'network-only') {
-        addResponse({
-          data: response,
-          key,
-          domains: opts.domains,
-        });
+        setFetching(false);
+        setResponseData(response);
+      } catch (error) {
+        setFetching(false);
+        setError(error);
       }
-
-      setFetching(false);
-      setResponseData(response);
-    } catch (error) {
-      setFetching(false);
-      setError(error);
-    }
-  }, [config.baseUrl, JSON.stringify(opts), url, addResponse]);
+    },
+    [config.baseUrl, JSON.stringify(opts), url, addResponse]
+  );
 
   /** Data change in cache */
   useEffect(() => {

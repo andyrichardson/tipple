@@ -40,10 +40,10 @@ const fetchAndParse = async (url: string, fetchArgs: RequestInit) => {
 };
 
 /** Join hook fetchOptions with global config. */
-type OptionalContextOptions = TippleClientOptions['fetchOptions'] | undefined
-type OptionalRequestInit = RequestInit | undefined
+type OptionalContextOptions = TippleClientOptions['fetchOptions'] | undefined;
+type OptionalRequestInit = RequestInit | undefined;
 export const mergeFetchOptions = (
-  ...args: 
+  ...args:
     | [OptionalContextOptions]
     | [OptionalContextOptions, OptionalRequestInit]
     | [OptionalContextOptions, OptionalRequestInit, OptionalRequestInit]
@@ -52,7 +52,10 @@ export const mergeFetchOptions = (
     throw Error('Cannot merge less than two values');
   }
 
-  return (args.slice(1) as RequestInit[]).reduce((prev, current) => doMergeFetchOptions(prev, current), args[0]);
+  return (args.slice(1) as RequestInit[]).reduce(
+    (prev, current) => doMergeFetchOptions(prev, current),
+    args[0]
+  );
 };
 
 const doMergeFetchOptions = (
