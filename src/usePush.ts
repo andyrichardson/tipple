@@ -1,6 +1,7 @@
 import { useContext, useCallback, useState } from 'react';
 import { TippleContext } from './context';
 import { executeRequest, mergeFetchOptions } from './util';
+import { ExecuteRequestOptions } from './types';
 
 export type TypedUsePush<D extends string> = <T extends any>(
   url: string,
@@ -31,26 +32,33 @@ export const usePush = <T = any, D extends string = string>(
   const [state, setState] = useState<PushState<T>>({ fetching: false });
 
   /** Executes fetching of data. */
-  const doFetch = useCallback(async () => {
-    setState({ ...state, fetching: true });
+  const doFetch = useCallback(
+    async (overrides: ExecuteRequestOptions = {}) => {
+      setState({ ...state, fetching: true });
 
-    try {
-      const response = await executeRequest(
-        `${opts.baseUrl || config.baseUrl || ''}${url}`,
-        {
-          method: 'POST',
-          ...mergeFetchOptions(config.fetchOptions, opts.fetchOptions),
-        }
-      );
+      try {
+        const response = await executeRequest(
+          `${overrides.baseUrl || opts.baseUrl || config.baseUrl || ''}${url}`,
+          {
+            method: 'POST',
+            ...mergeFetchOptions(
+              config.fetchOptions,
+              opts.fetchOptions,
+              overrides.fetchOptions
+            ),
+          }
+        );
 
-      clearDomains(opts.domains);
-      setState({ fetching: false, data: response });
-      return response;
-    } catch (error) {
-      setState({ ...state, error });
-      throw error;
-    }
-  }, [state, JSON.stringify(opts)]);
+        clearDomains(opts.domains);
+        setState({ fetching: false, data: response });
+        return response;
+      } catch (error) {
+        setState({ ...state, error });
+        throw error;
+      }
+    },
+    [state, JSON.stringify(opts)]
+  );
 
   const reset = useCallback(() => setState({ fetching: false }), []);
 

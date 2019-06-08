@@ -4,6 +4,11 @@ export type CachePolicy =
   | 'network-first'
   | 'network-only';
 
+export interface ExecuteRequestOptions {
+  baseUrl?: string;
+  fetchOptions?: RequestInit;
+}
+
 /** Use fetch options shared across all configs. */
 export interface BaseUseFetchOptions<D extends string = string, T = any> {
   domains: D[];

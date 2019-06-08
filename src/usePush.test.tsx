@@ -31,7 +31,7 @@ let opts: Parameters<typeof usePush>[1] = { domains: ['users'] };
 
 // Hook results
 let state: FetchState;
-let doFetch: () => Promise<any>;
+let doFetch: (arg?: any) => Promise<any>;
 let reset: () => void;
 
 const HookFixture: FC = () => {
@@ -91,6 +91,18 @@ describe('on doFetch', () => {
     expect(executeRequest).toBeCalledWith(`${config.baseUrl}${url}`, {
       ...config.fetchOptions,
       method: 'POST',
+    });
+  });
+
+  it('calls executeRequest with override url and options', () => {
+    const overrides = {
+      baseUrl: 'http://override',
+      fetchOptions: { method: 'PUT', body: JSON.stringify({ arg: 1234 }) },
+    };
+    doFetch(overrides);
+    expect(executeRequest).toBeCalledWith(`${overrides.baseUrl}${url}`, {
+      ...config.fetchOptions,
+      ...overrides.fetchOptions,
     });
   });
 

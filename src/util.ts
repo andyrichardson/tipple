@@ -40,7 +40,20 @@ const fetchAndParse = async (url: string, fetchArgs: RequestInit) => {
 };
 
 /** Join hook fetchOptions with global config. */
+type OptionalContextOptions = TippleClientOptions['fetchOptions'] | undefined;
+type OptionalRequestInit = RequestInit | undefined;
 export const mergeFetchOptions = (
+  ...args:
+    | [OptionalContextOptions]
+    | [OptionalContextOptions, OptionalRequestInit]
+    | [OptionalContextOptions, OptionalRequestInit, OptionalRequestInit]
+) =>
+  (args.slice(1) as RequestInit[]).reduce(
+    (prev, current) => doMergeFetchOptions(prev, current),
+    args[0]
+  );
+
+const doMergeFetchOptions = (
   contextOptions: TippleClientOptions['fetchOptions'] = o => o,
   clientOptions: RequestInit = {}
 ) =>
@@ -50,7 +63,7 @@ export const mergeFetchOptions = (
         ...contextOptions,
         ...clientOptions,
         headers:
-          contextOptions === undefined
+          contextOptions === undefined || contextOptions.headers === undefined
             ? clientOptions.headers
             : { ...contextOptions.headers, ...clientOptions.headers },
       };
