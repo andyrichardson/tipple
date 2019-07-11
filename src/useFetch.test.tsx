@@ -173,6 +173,25 @@ describe('on manual fetch', () => {
   });
 });
 
+describe('on update', () => {
+  let instance: renderer.ReactTestRenderer;
+
+  beforeEach(() => {
+    instance = renderer.create(<Fixture />);
+  });
+
+  it('calls fetch again when args change', async () => {
+    url = '/newUrl';
+    instance.update(<Fixture />);
+    await waitForAsync();
+    expect(executeRequest).toBeCalledTimes(2);
+    expect(executeRequest).toBeCalledWith(
+      expect.stringContaining(url),
+      expect.any(Object)
+    );
+  });
+});
+
 describe('on fetched', () => {
   let instance: renderer.ReactTestRenderer;
 

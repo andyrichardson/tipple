@@ -56,7 +56,7 @@ export const usePush = <T = any, D extends string = string>(
         throw error;
       }
     },
-    [state, JSON.stringify(opts)]
+    [url, state, opts, config, clearDomains]
   );
 
   const reset = useCallback(() => setState({ fetching: false }), []);

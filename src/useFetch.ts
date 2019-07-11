@@ -5,7 +5,6 @@ import {
   useEffect,
   useMemo,
   useRef,
-  useLayoutEffect,
 } from 'react';
 import { TippleContext } from './context';
 import { executeRequest, getKey, mergeFetchOptions } from './util';
@@ -33,7 +32,7 @@ export const useFetch = <T = any, D extends string = string>(
   const { config, cache, addResponse } = useContext(TippleContext);
   const cacheState = useMemo(
     () => cache[key] || { refetch: false, data: undefined },
-    [cache[key]]
+    [cache[key]] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const [fetching, setFetching] = useState<boolean>(fetchOnChange.current);
@@ -78,7 +77,18 @@ export const useFetch = <T = any, D extends string = string>(
         setError(error);
       }
     },
-    [config.baseUrl, JSON.stringify(opts), url, addResponse]
+    [
+      key,
+      config.baseUrl,
+      config.fetchOptions,
+      opts.cachePolicy,
+      opts.baseUrl,
+      // @ts-ignore
+      opts.domains,
+      opts.fetchOptions,
+      url,
+      addResponse,
+    ]
   );
 
   /** On mount. */
@@ -129,14 +139,14 @@ export const useFetch = <T = any, D extends string = string>(
     if (cacheState.refetch) {
       doFetch();
     }
-  }, [fetching, opts.cachePolicy, cacheState.refetch]);
+  }, [doFetch, fetching, opts.cachePolicy, cacheState.refetch]);
 
   const data = useMemo(
     () =>
       responseData !== undefined && opts.parseResponse !== undefined
         ? opts.parseResponse(responseData)
         : responseData,
-    [responseData]
+    [responseData, opts]
   );
 
   return [{ fetching, error, data }, doFetch];
