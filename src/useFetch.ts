@@ -77,15 +77,12 @@ export const useFetch = <T = any, D extends string = string>(
         setError(error);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       key,
       config.baseUrl,
       config.fetchOptions,
-      opts.cachePolicy,
-      opts.baseUrl,
-      // @ts-ignore
-      opts.domains,
-      opts.fetchOptions,
+      JSON.stringify(opts), // eslint-disable-line react-hooks/exhaustive-deps
       url,
       addResponse,
     ]
