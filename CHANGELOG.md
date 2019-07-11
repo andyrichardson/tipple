@@ -1,5 +1,44 @@
 # Changelog
 
+## [v0.5.0](https://github.com/andyrichardson/tipple/tree/v0.5.0) (2019-07-11)
+
+[Full Changelog](https://github.com/andyrichardson/tipple/compare/v0.4.1...v0.5.0)
+
+**Breaking changes:**
+
+- Add ability to auto-fetch on useFetch args change [\#47](https://github.com/andyrichardson/tipple/issues/47)
+
+**Additions:**
+
+- Add ability to specify fetchOptions on fetch & push execution [\#41](https://github.com/andyrichardson/tipple/issues/41)
+
+**Fixed bugs:**
+
+- Add displayName attribute to components [\#39](https://github.com/andyrichardson/tipple/issues/39)
+- Make createClient arg optional [\#37](https://github.com/andyrichardson/tipple/issues/37)
+
+**Closed issues:**
+
+- Cleanup example repo [\#40](https://github.com/andyrichardson/tipple/issues/40)
+
+**Merged pull requests:**
+
+- update deps [\#49](https://github.com/andyrichardson/tipple/pull/49) ([andyrichardson](https://github.com/andyrichardson))
+- change onMount implementation for autoFetch [\#48](https://github.com/andyrichardson/tipple/pull/48) ([andyrichardson](https://github.com/andyrichardson))
+- Add config overrides for fetch & push triggers [\#45](https://github.com/andyrichardson/tipple/pull/45) ([andyrichardson](https://github.com/andyrichardson))
+- Update dependencies [\#44](https://github.com/andyrichardson/tipple/pull/44) ([andyrichardson](https://github.com/andyrichardson))
+- add displayname [\#43](https://github.com/andyrichardson/tipple/pull/43) ([andyrichardson](https://github.com/andyrichardson))
+- Make createClient arg optional [\#42](https://github.com/andyrichardson/tipple/pull/42) ([kitten](https://github.com/kitten))
+- Example app updates [\#36](https://github.com/andyrichardson/tipple/pull/36) ([kadikraman](https://github.com/kadikraman))
+
+## [v0.4.1](https://github.com/andyrichardson/tipple/tree/v0.4.1) (2019-05-26)
+
+[Full Changelog](https://github.com/andyrichardson/tipple/compare/v0.4.0...v0.4.1)
+
+**Merged pull requests:**
+
+- Release prep [\#35](https://github.com/andyrichardson/tipple/pull/35) ([andyrichardson](https://github.com/andyrichardson))
+
 ## [v0.4.0](https://github.com/andyrichardson/tipple/tree/v0.4.0) (2019-05-26)
 
 [Full Changelog](https://github.com/andyrichardson/tipple/compare/v0.3.1...v0.4.0)
@@ -11,14 +50,18 @@
 
 **Additions:**
 
+- Add ability to add custom reducers/handlers [\#13](https://github.com/andyrichardson/tipple/issues/13)
 - Parse data on receipt [\#24](https://github.com/andyrichardson/tipple/issues/24)
 - Prevent duplicate fetch requests [\#20](https://github.com/andyrichardson/tipple/issues/20)
-- Add ability to add custom reducers/handlers [\#13](https://github.com/andyrichardson/tipple/issues/13)
 
 **Fixed bugs:**
 
 - Allow no baseUrl to be specified [\#30](https://github.com/andyrichardson/tipple/issues/30)
 - Allow non-json responses [\#29](https://github.com/andyrichardson/tipple/issues/29)
+
+**Closed issues:**
+
+- Prepare for v0.4 relase [\#34](https://github.com/andyrichardson/tipple/issues/34)
 
 **Merged pull requests:**
 
