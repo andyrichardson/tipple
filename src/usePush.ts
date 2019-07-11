@@ -16,7 +16,6 @@ export interface PushState<T = any> {
 
 interface UsePushOptions<D extends string> {
   domains: D[];
-  onMount?: boolean;
   baseUrl?: string;
   fetchOptions?: RequestInit;
 }
@@ -57,7 +56,7 @@ export const usePush = <T = any, D extends string = string>(
         throw error;
       }
     },
-    [state, JSON.stringify(opts)]
+    [url, state, opts, config, clearDomains]
   );
 
   const reset = useCallback(() => setState({ fetching: false }), []);

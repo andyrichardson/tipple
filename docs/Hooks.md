@@ -63,9 +63,9 @@ The way in which data is retrieved from the cache or network:
 
 > Note: When using the _network-only_ cache policy, you will not be able to specify a domain as the cache is not being used.
 
-##### onMount
+##### autoFetch
 
-Whether the fetch should be triggered on initial mount (defaults to true).
+Whether the fetch should automatically be triggered on initial mount and whenever arguments change (defaults to true).
 
 ##### fetchOptions
 
@@ -163,7 +163,7 @@ The endpoint URL (as [described for useFetch](#Arguments)).
 
 #### Additional options
 
-All the arguments for `usePush` are identical to that of `useFetch` with the exception of `cachePolicy`, `onMount` and `parseResponse`.
+All the arguments for `usePush` are identical to that of `useFetch` with the exception of `cachePolicy`, `autoFetch` and `parseResponse`.
 
 ### Response
 

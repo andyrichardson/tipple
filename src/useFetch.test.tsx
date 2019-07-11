@@ -89,19 +89,6 @@ describe('on init', () => {
     });
   });
 
-  describe('onMount disabled', () => {
-    beforeEach(() => ((opts as GeneralUseFetchOptions).onMount = false));
-
-    it('defaults to not fetching', () => {
-      expect(state.fetching).toBe(true);
-    });
-
-    it("doesn't call executeRequest", async () => {
-      instance.update(<Fixture />);
-      expect(executeRequest).toBeCalledTimes(0);
-    });
-  });
-
   describe('baseUrl set', () => {
     beforeEach(() => {
       opts.baseUrl = 'http://exampleBaseUrl';
@@ -136,6 +123,24 @@ describe('on init', () => {
   });
 });
 
+describe('on init with autoFetch disabled', () => {
+  beforeEach(() => {
+    // @ts-ignore
+    opts = { ...opts, cachePolicy: 'cache-first', autoFetch: false };
+  });
+
+  it('defaults to not fetching on mount', () => {
+    renderer.create(<Fixture />);
+    expect(state.fetching).toBe(false);
+  });
+
+  it("doesn't call executeRequest on update", async () => {
+    const instance = renderer.create(<Fixture />);
+    instance.update(<Fixture />);
+    expect(executeRequest).toBeCalledTimes(0);
+  });
+});
+
 describe('on manual fetch', () => {
   let instance: renderer.ReactTestRenderer;
 
@@ -165,6 +170,25 @@ describe('on manual fetch', () => {
       ...config.fetchOptions,
       ...override.fetchOptions,
     });
+  });
+});
+
+describe('on update', () => {
+  let instance: renderer.ReactTestRenderer;
+
+  beforeEach(() => {
+    instance = renderer.create(<Fixture />);
+  });
+
+  it('calls fetch again when args change', async () => {
+    url = '/newUrl';
+    instance.update(<Fixture />);
+    await waitForAsync();
+    expect(executeRequest).toBeCalledTimes(2);
+    expect(executeRequest).toBeCalledWith(
+      expect.stringContaining(url),
+      expect.any(Object)
+    );
   });
 });
 

@@ -12,7 +12,7 @@ export interface ExecuteRequestOptions {
 /** Use fetch options shared across all configs. */
 export interface BaseUseFetchOptions<D extends string = string, T = any> {
   domains: D[];
-  onMount?: boolean;
+  autoFetch?: boolean;
   parseResponse?: (response: any) => T;
   baseUrl?: string;
   fetchOptions?: RequestInit;
@@ -30,9 +30,9 @@ export interface NetworkOnlyUseFetchOptions<T>
   cachePolicy: 'network-only';
 }
 
-/** useFetch options without onMount option (for cache-only). */
+/** useFetch options without autoFetch option (for cache-only). */
 export interface CacheOnlyUseFetchOptions<D extends string, T = any>
-  extends Omit<BaseUseFetchOptions<D, T>, 'onMount'> {
+  extends Omit<BaseUseFetchOptions<D, T>, 'autoFetch'> {
   cachePolicy: 'cache-only';
 }
 
