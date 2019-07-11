@@ -1,4 +1,12 @@
-import { useContext, useCallback, useState, useEffect, useMemo } from 'react';
+import {
+  useContext,
+  useCallback,
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+  useLayoutEffect,
+} from 'react';
 import { TippleContext } from './context';
 import { executeRequest, getKey, mergeFetchOptions } from './util';
 import {
@@ -12,6 +20,10 @@ export const useFetch = <T = any, D extends string = string>(
   url: string,
   opts: UseFetchOptions<D, T>
 ): UseFetchResponse<T> => {
+  const fetchOnChange = useRef(
+    opts.cachePolicy !== 'cache-only' && opts.autoFetch !== false
+  );
+
   /** Unique identifier of request. */
   const key = useMemo(() => getKey(url, opts.fetchOptions || {}), [
     url,
@@ -24,9 +36,7 @@ export const useFetch = <T = any, D extends string = string>(
     [cache[key]]
   );
 
-  const [fetching, setFetching] = useState<boolean>(
-    opts.cachePolicy !== 'cache-only' && opts.onMount !== false
-  );
+  const [fetching, setFetching] = useState<boolean>(fetchOnChange.current);
   const [responseData, setResponseData] = useState<T | undefined>(
     opts.cachePolicy !== 'network-only' && opts.cachePolicy !== 'network-first'
       ? cacheState.data
@@ -71,7 +81,20 @@ export const useFetch = <T = any, D extends string = string>(
     [config.baseUrl, JSON.stringify(opts), url, addResponse]
   );
 
-  /** Data change in cache */
+  /** On mount. */
+  useEffect(() => {
+    if (fetchOnChange.current) {
+      doFetch();
+    }
+  }, [doFetch]);
+
+  /** Update autoFetch value. */
+  useEffect(() => {
+    fetchOnChange.current =
+      opts.cachePolicy !== 'cache-only' && opts.autoFetch !== false;
+  }, [opts]);
+
+  /** Data change in cache. */
   useEffect(() => {
     // Data from cache is unchanged
     if (
@@ -92,13 +115,6 @@ export const useFetch = <T = any, D extends string = string>(
 
     setResponseData(cacheState.data);
   }, [responseData, opts.cachePolicy, cacheState.data]);
-
-  /** On mount. */
-  useEffect(() => {
-    if (opts.cachePolicy !== 'cache-only' && opts.onMount !== false) {
-      doFetch();
-    }
-  }, []);
 
   /** On cache invalidation. */
   useEffect(() => {

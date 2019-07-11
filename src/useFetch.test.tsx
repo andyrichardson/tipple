@@ -89,19 +89,6 @@ describe('on init', () => {
     });
   });
 
-  describe('onMount disabled', () => {
-    beforeEach(() => ((opts as GeneralUseFetchOptions).onMount = false));
-
-    it('defaults to not fetching', () => {
-      expect(state.fetching).toBe(true);
-    });
-
-    it("doesn't call executeRequest", async () => {
-      instance.update(<Fixture />);
-      expect(executeRequest).toBeCalledTimes(0);
-    });
-  });
-
   describe('baseUrl set', () => {
     beforeEach(() => {
       opts.baseUrl = 'http://exampleBaseUrl';
@@ -133,6 +120,24 @@ describe('on init', () => {
         domains: (opts as GeneralUseFetchOptions).domains,
       });
     });
+  });
+});
+
+describe('on init with autoFetch disabled', () => {
+  beforeEach(() => {
+    // @ts-ignore
+    opts = { ...opts, cachePolicy: 'cache-first', autoFetch: false };
+  });
+
+  it('defaults to not fetching on mount', () => {
+    renderer.create(<Fixture />);
+    expect(state.fetching).toBe(false);
+  });
+
+  it("doesn't call executeRequest on update", async () => {
+    const instance = renderer.create(<Fixture />);
+    instance.update(<Fixture />);
+    expect(executeRequest).toBeCalledTimes(0);
   });
 });
 
