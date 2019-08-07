@@ -41,6 +41,12 @@ Here you can set any default fetchOptions for API calls (useful for injecting au
 
 > Note: `fetchOptions` can also be a function. If this is the case, it will be called with the `fetchOptions` value that was passed to the requesting hook.
 
+#### initialCache
+
+A starting cache state for persistence purposes. This can be used along with `localStorage` to persist cache states across reloads.
+
+> Note: This feature can also useful when using cached values in server-side rendering.
+
 ## Type safe domains
 
 For consistency across your codebase, it is strongly recommended that you type your domains. Typed domains can be specified when calling useFetch as demonstrated below.

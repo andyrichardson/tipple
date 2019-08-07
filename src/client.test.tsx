@@ -1,25 +1,55 @@
 import { createClient, TippleClient } from './client';
 
-let client: TippleClient;
 const opts = {
   baseUrl: 'http://1234',
   fetchOptions: { headers: { 'content-type': 'application/json' } },
 };
-const cacheWatcher = jest.fn();
 
-beforeEach(() => {
-  client = createClient(opts);
-  client.addCacheWatcher(cacheWatcher);
-});
+const cacheWatcher = jest.fn();
 
 beforeEach(jest.clearAllMocks);
 
-describe('addResponse', () => {
+describe('on init', () => {
+  let client: TippleClient;
+  const config = {
+    ...opts,
+    initialCache: {
+      key: {
+        data: { example: 99999 },
+        domains: ['domain1', 'domain2'],
+        refetch: true,
+      },
+    },
+  };
+  const cacheWatcher = jest.fn();
+
+  beforeEach(() => {
+    client = createClient(config);
+    client.addCacheWatcher(cacheWatcher);
+  });
+
+  it('config is forwarded', () => {
+    expect(client.config).toEqual(config);
+  });
+
+  it('initial cache is used', () => {
+    client.clearDomains(['domain1']);
+    expect(cacheWatcher).toBeCalledWith(config.initialCache);
+  });
+});
+
+describe('on addResponse', () => {
   const response = {
     key: '1234',
     data: { example: 'data' },
     domains: ['domain'],
   };
+  let client: TippleClient;
+
+  beforeEach(() => {
+    client = createClient(opts);
+    client.addCacheWatcher(cacheWatcher);
+  });
 
   describe('initial addition', () => {
     it('passes cache to cacheWatcher', () => {
@@ -115,7 +145,7 @@ describe('addResponse', () => {
   });
 });
 
-describe('clearDomains', () => {
+describe('on clearDomains', () => {
   const response1 = {
     key: '1234',
     data: { example: 'data' },
@@ -132,7 +162,11 @@ describe('clearDomains', () => {
     domains: ['domain4', 'domain2'],
   };
 
+  let client: TippleClient;
+
   beforeEach(() => {
+    client = createClient(opts);
+    client.addCacheWatcher(cacheWatcher);
     client.addResponse(response1);
     client.addResponse(response2);
     client.addResponse(response3);
@@ -188,11 +222,5 @@ describe('clearDomains', () => {
         },
       });
     });
-  });
-});
-
-describe('config', () => {
-  it('is forwarded', () => {
-    expect(client.config).toEqual(opts);
   });
 });
