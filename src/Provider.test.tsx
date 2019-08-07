@@ -38,6 +38,15 @@ describe('on mount', () => {
     const instance = renderer.create(<Fixture />);
     expect(contextState).toHaveProperty('cache', client.config.initialCache);
   });
+
+  it('defaults to empty object when no cache', () => {
+    client = {
+      ...client,
+      config: {},
+    };
+    const instance = renderer.create(<Fixture />);
+    expect(contextState).toHaveProperty('cache', {});
+  });
 });
 
 describe('on cache update', () => {
