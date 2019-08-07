@@ -1,5 +1,22 @@
 # Changelog
 
+## [v0.6.0](https://github.com/andyrichardson/tipple/tree/v0.6.0) (2019-08-07)
+
+[Full Changelog](https://github.com/andyrichardson/tipple/compare/v0.5.0...v0.6.0)
+
+**Breaking changes:**
+
+- Add persistence capability to the client [\#38](https://github.com/andyrichardson/tipple/issues/38)
+
+**Additions:**
+
+- Add support for SSR [\#21](https://github.com/andyrichardson/tipple/issues/21)
+
+**Merged pull requests:**
+
+- update dependencies [\#51](https://github.com/andyrichardson/tipple/pull/51) ([andyrichardson](https://github.com/andyrichardson))
+- Add persistence capabilities to the client \(initialCache\) [\#50](https://github.com/andyrichardson/tipple/pull/50) ([andyrichardson](https://github.com/andyrichardson))
+
 ## [v0.5.0](https://github.com/andyrichardson/tipple/tree/v0.5.0) (2019-07-11)
 
 [Full Changelog](https://github.com/andyrichardson/tipple/compare/v0.4.1...v0.5.0)
