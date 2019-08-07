@@ -122,7 +122,7 @@ export const AddComment: FC = () => {
     '/posts/1/comments',
     {
       domains: ['comments'],
-      fetchOptions: { method: 'POST' body: JSON.stringify(inputState) },
+      fetchOptions: { method: 'POST', body: JSON.stringify(inputState) },
     }
   );
 
