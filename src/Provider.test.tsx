@@ -7,6 +7,7 @@ import { TippleClient } from './client';
 
 let client = ({
   addCacheWatcher: jest.fn(),
+  config: { initialCache: { key: 'value' } },
 } as unknown) as TippleClient;
 
 let contextState: any;
@@ -31,6 +32,11 @@ describe('on mount', () => {
     const instance = renderer.create(<Fixture />);
     instance.update(<Fixture />);
     expect(client.addCacheWatcher).toBeCalledTimes(1);
+  });
+
+  it('cache matches initialCache value', () => {
+    const instance = renderer.create(<Fixture />);
+    expect(contextState).toHaveProperty('cache', client.config.initialCache);
   });
 });
 

@@ -7,7 +7,9 @@ export const Provider: FC<{ client: TippleClient }> = ({
   client,
   children,
 }) => {
-  const [cache, setCache] = useState<TippleCache>(client.cache);
+  const [cache, setCache] = useState<TippleCache>(
+    client.config.initialCache || {}
+  );
 
   useEffect(() => client.addCacheWatcher(setCache), [client]);
 

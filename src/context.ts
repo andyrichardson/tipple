@@ -1,4 +1,6 @@
 import { createContext } from 'react';
-import { TippleClient } from './client';
+import { TippleClient, TippleCache } from './client';
 
-export const TippleContext = createContext<TippleClient>(null as any);
+export const TippleContext = createContext<
+  TippleClient & { cache: TippleCache }
+>(null as any);
