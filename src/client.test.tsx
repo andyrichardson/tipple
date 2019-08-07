@@ -20,7 +20,7 @@ describe('on init', () => {
         refetch: true,
       },
     },
-  }
+  };
   const cacheWatcher = jest.fn();
 
   beforeEach(() => {
