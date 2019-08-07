@@ -73,7 +73,7 @@ The [fetch 'init' argument](https://developer.mozilla.org/en-US/docs/Web/API/Win
 
 ##### parseResponse
 
-Expects a function which recieves the API response and returns a parsed value of type `T`.
+Expects a function which receives the API response and returns a parsed value of type `T`.
 
 > Note: The argument to the parser should be casted in order to ensure type safety (e.g. `parseResponse: (arg: ApiResponse) => arg[0]`).
 
@@ -122,12 +122,15 @@ export const AddComment: FC = () => {
     '/posts/1/comments',
     {
       domains: ['comments'],
-      fetchOptions: { method: 'POST', body: JSON.stringify(inputState) },
+      fetchOptions: {
+        method: 'POST',
+        body: JSON.stringify(inputState),
+      },
     }
   );
 
   if (req.fetching) {
-    return <Spinner />
+    return <Spinner />;
   }
 
   if (req.error) {

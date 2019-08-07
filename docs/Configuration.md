@@ -69,7 +69,12 @@ To force domain type safety throughout your application, you can proxy the _useF
 
 ```tsx
 // src/utils.ts
-import { useFetch as useFetchOriginal, usePush as usePushOriginal, TypedUseFetch, TypedUsePush } from 'tipple';
+import {
+  useFetch as useFetchOriginal,
+  usePush as usePushOriginal,
+  TypedUseFetch,
+  TypedUsePush,
+} from 'tipple';
 
 type Domain = 'posts' | 'comments' | 'users';
 
