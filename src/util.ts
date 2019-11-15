@@ -8,16 +8,19 @@ export const getKey = (url: string, fetchArgs: RequestInit) =>
 const inFlight: Record<string, any> = {};
 
 /** Executes API call and throws when response is invalid. */
-export const executeRequest = async (url: string, fetchArgs: RequestInit) => {
+export const executeRequest = async <T = any>(
+  url: string,
+  fetchArgs: RequestInit
+) => {
   // Exclude push requests from deduping
   if (fetchArgs.method !== undefined && fetchArgs.method !== 'GET') {
-    return fetchAndParse(url, fetchArgs);
+    return fetchAndParse<T>(url, fetchArgs);
   }
 
   const isInFlight = inFlight[url] !== undefined;
   const response = isInFlight
-    ? inFlight[url]
-    : (inFlight[url] = fetchAndParse(url, fetchArgs));
+    ? (inFlight[url] as Promise<T>)
+    : (inFlight[url] = fetchAndParse<T>(url, fetchArgs));
 
   if (!isInFlight) {
     const cleanup = () => delete inFlight[url];
@@ -28,9 +31,9 @@ export const executeRequest = async (url: string, fetchArgs: RequestInit) => {
 };
 
 /** Fetch data and parse json (if possible). */
-const fetchAndParse = async (url: string, fetchArgs: RequestInit) => {
+const fetchAndParse = async <T = any>(url: string, fetchArgs: RequestInit) => {
   const response = await fetch(url, fetchArgs);
-  const data = await response.json().catch(() => response);
+  const data: T = await response.json().catch(() => response);
 
   if (!response.ok) {
     throw data;
