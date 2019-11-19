@@ -17,6 +17,7 @@
     "cache"
   ],
   "scripts": {
+    "start": "npm --prefix example i && npm --prefix example start",
     "build": "microbundle build",
     "test": "jest",
     "lint": "eslint src/**/*",
