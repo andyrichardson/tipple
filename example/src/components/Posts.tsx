@@ -1,31 +1,38 @@
 import { Spin, Button } from 'antd';
 import React, { FC } from 'react';
-import { useFetch } from 'tipple';
+import {
+  useFetch,
+  preloadFetch,
+  TippleContext,
+  usePreloadedFetch,
+} from 'tipple';
 import { Post } from './Post';
+import { tipple } from '../App';
+import { useContext } from 'react';
+
+const preloadedPosts = preloadFetch<PostData[]>(tipple, '/posts');
+// posts: tipple.executeRequest<PostData[]>('/posts'),
+// };
 
 export const Posts: FC = () => {
-  const [posts, refetch] = useFetch<PostData[], DataDomain>('/posts', {
-    domains: ['posts'],
+  // return <h1>posts</h1>;
+  const response = usePreloadedFetch(preloadedPosts, {
+    domains: ['post'],
+    cachePolicy: 'cache-only',
   });
 
-  if (posts.fetching && posts.data === undefined) {
-    return (
-      <div style={{ textAlign: 'center' }}>
-        <Spin size="large" />
-      </div>
-    );
-  }
+  console.log(clearDomains);
 
-  if (posts.error !== undefined || posts.data === undefined) {
-    return <div>Error!</div>;
-  }
-
+  console.log(response.data);
   return (
     <>
-      {posts.data.slice().reverse().map(post => (
-        <Post key={post.id} post={post} />
-      ))}
-      <Button onClick={refetch}>Refetch</Button>
+      {response.data
+        .slice()
+        .reverse()
+        .map(post => (
+          <Post key={post.id} post={post} />
+        ))}
     </>
   );
 };
+export default Posts;

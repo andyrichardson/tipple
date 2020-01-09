@@ -19,6 +19,7 @@ export interface TippleClient<D extends string = string> {
   addCacheWatcher: (callback: (cache: TippleCache<D>) => void) => void;
   addResponse: (arg: { key: string; data: any; domains: D[] }) => void;
   clearDomains: (domains: D | D[]) => void;
+  executeRequest: <T>(url: string, opts?: ExecuteRequestOptions) => Promise<T>;
   cache: TippleCache<D>;
   config: TippleClientOptions<D>;
 }
