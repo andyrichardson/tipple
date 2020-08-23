@@ -1,6 +1,9 @@
-<img alt="Tipple logo" src="https://github.com/andyrichardson/tipple/blob/master/docs/assets/logo.png?raw=true" width="250px" />
+<p align="center">
+  <img alt="Tipple logo" src="https://github.com/andyrichardson/tipple/blob/master/docs/assets/logo.png?raw=true" width="150px" />
+</p>
 
-A lightweight dependency-free library for fetching data over REST in React.
+<h1 align="center">Tipple</h1>
+<p align="center"><i>A lightweight dependency-free library for fetching data over REST in React.</i></p>
 
 <p align="center">
   <a href="https://gitlab.com/andyrichardson/tipple/pipelines">
