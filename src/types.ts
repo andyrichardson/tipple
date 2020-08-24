@@ -18,23 +18,34 @@ export interface BaseUseFetchOptions<D extends string = string, T = any> {
   fetchOptions?: RequestInit;
 }
 
-/** Default useFetch options. */
-export interface GeneralUseFetchOptions<D extends string = string, T = any>
-  extends BaseUseFetchOptions<D, T> {
-  cachePolicy?: Exclude<CachePolicy, 'network-only' | 'cache-only'>;
-}
+export type GeneralFetchOptions<T extends Partial<BaseUseFetchOptions>> = T & {
+  cachePolicy: Exclude<CachePolicy, 'network-only' | 'cache-only'>;
+};
 
-/** useFetch options without domain (for network-only). */
-export interface NetworkOnlyUseFetchOptions<T>
-  extends Omit<BaseUseFetchOptions<never, T>, 'domains'> {
+export type CacheOnlyOption<T extends Partial<BaseUseFetchOptions>> = Omit<
+  T,
+  'autoFetch'
+> & { cachePolicy: 'cache-only' };
+
+export type NetworkOnlyOption<T extends Partial<BaseUseFetchOptions>> = Omit<
+  T,
+  'domains'
+> & {
   cachePolicy: 'network-only';
-}
+};
 
+/** Default useFetch options. */
+type GeneralUseFetchOptions<D extends string, T> = GeneralFetchOptions<
+  BaseUseFetchOptions<D, T>
+>;
+/** useFetch options without domain (for network-only). */
+type NetworkOnlyUseFetchOptions<T> = NetworkOnlyOption<
+  BaseUseFetchOptions<never, T>
+>;
 /** useFetch options without autoFetch option (for cache-only). */
-export interface CacheOnlyUseFetchOptions<D extends string, T = any>
-  extends Omit<BaseUseFetchOptions<D, T>, 'autoFetch'> {
-  cachePolicy: 'cache-only';
-}
+type CacheOnlyUseFetchOptions<D extends string, T> = CacheOnlyOption<
+  BaseUseFetchOptions<D, T>
+>;
 
 /** Config options for useFetch. */
 export type UseFetchOptions<D extends string = string, T = any> =

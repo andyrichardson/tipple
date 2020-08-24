@@ -9,6 +9,11 @@
       "id": 2,
       "title": "Unpopular opinion - Tipple edition.",
       "author": "Ken"
+    },
+    {
+      "author": "user",
+      "title": "test",
+      "id": 3
     }
   ],
   "comments": [

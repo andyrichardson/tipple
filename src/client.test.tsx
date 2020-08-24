@@ -1,4 +1,10 @@
+jest.mock('./util', () => ({
+  ...jest.requireActual('./util'),
+  executeRequest: jest.fn(),
+}));
 import { createClient, TippleClient } from './client';
+import { mocked } from 'ts-jest/utils';
+import { executeRequest } from './util';
 
 const opts = {
   baseUrl: 'http://1234',
@@ -220,6 +226,55 @@ describe('on clearDomains', () => {
           domains: response3.domains,
           refetch: true,
         },
+      });
+    });
+  });
+});
+
+describe('on executeRequest', () => {
+  const url = '/test';
+  const executeRequestMock = mocked(executeRequest);
+  let client: TippleClient;
+  const config = {
+    ...opts,
+  };
+
+  beforeEach(() => {
+    client = createClient(config);
+  });
+
+  it('calls util', () => {
+    client.executeRequest(url);
+    expect(executeRequestMock).toBeCalledTimes(1);
+  });
+
+  describe('on no additional options', () => {
+    beforeEach(() => {
+      client.executeRequest(url);
+    });
+
+    it('calls util with default args', () => {
+      expect(executeRequestMock).toBeCalledWith(
+        `${config.baseUrl}${url}`,
+        config.fetchOptions
+      );
+    });
+  });
+
+  describe('on additional  options', () => {
+    const mergeOpts = {
+      baseUrl: 'http://newurl/',
+      fetchOptions: { method: 'POST' },
+    };
+
+    beforeEach(() => {
+      client.executeRequest(url, mergeOpts);
+    });
+
+    it('calls util with config overrides', () => {
+      expect(executeRequestMock).toBeCalledWith(`${mergeOpts.baseUrl}${url}`, {
+        ...config.fetchOptions,
+        ...mergeOpts.fetchOptions,
       });
     });
   });

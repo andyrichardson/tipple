@@ -12,6 +12,7 @@ import {
   UseFetchOptions,
   UseFetchResponse,
   ExecuteRequestOptions,
+  FetchState,
 } from './types';
 
 /** Hook for executing fetch requests (GET). */
@@ -19,6 +20,7 @@ export const useFetch = <T = any, D extends string = string>(
   url: string,
   opts: UseFetchOptions<D, T>
 ): UseFetchResponse<T> => {
+  const { config, cache, addResponse } = useContext(TippleContext);
   const fetchOnChange = useRef(
     opts.cachePolicy !== 'cache-only' && opts.autoFetch !== false
   );
@@ -29,24 +31,28 @@ export const useFetch = <T = any, D extends string = string>(
     opts.fetchOptions,
   ]);
 
-  const { config, cache, addResponse } = useContext(TippleContext);
   const cacheState = useMemo(
     () => cache[key] || { refetch: false, data: undefined },
     [cache[key]] // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  const [fetching, setFetching] = useState<boolean>(fetchOnChange.current);
-  const [responseData, setResponseData] = useState<T | undefined>(
-    opts.cachePolicy !== 'network-only' && opts.cachePolicy !== 'network-first'
-      ? cacheState.data
-      : undefined
-  );
-  const [error, setError] = useState<Error | undefined>(undefined);
+  const [state, setState] = useState<FetchState<T>>({
+    fetching: fetchOnChange.current,
+    data:
+      opts.cachePolicy !== 'network-only' &&
+      opts.cachePolicy !== 'network-first'
+        ? cacheState.data
+        : undefined,
+    error: undefined,
+  });
 
   /** Executes fetching of data. */
   const doFetch = useCallback(
     async (overrides: ExecuteRequestOptions = {}) => {
-      setFetching(true);
+      setState(s => ({
+        ...s,
+        fetching: true,
+      }));
 
       try {
         const response = await executeRequest(
@@ -70,11 +76,17 @@ export const useFetch = <T = any, D extends string = string>(
           });
         }
 
-        setFetching(false);
-        setResponseData(response);
+        setState(s => ({
+          ...s,
+          fetching: false,
+          data: response,
+        }));
       } catch (error) {
-        setFetching(false);
-        setError(error);
+        setState(s => ({
+          ...s,
+          fetching: false,
+          error: error,
+        }));
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,7 +118,7 @@ export const useFetch = <T = any, D extends string = string>(
     // Data from cache is unchanged
     if (
       cacheState.data === undefined &&
-      JSON.stringify(responseData) === JSON.stringify(cacheState.data)
+      JSON.stringify(state.data) === JSON.stringify(cacheState.data)
     ) {
       return;
     }
@@ -116,17 +128,17 @@ export const useFetch = <T = any, D extends string = string>(
     }
 
     // Initial network request is yet to complete
-    if (opts.cachePolicy === 'network-first' && responseData === undefined) {
+    if (opts.cachePolicy === 'network-first' && state.data === undefined) {
       return;
     }
 
-    setResponseData(cacheState.data);
-  }, [responseData, opts.cachePolicy, cacheState.data]);
+    setState(s => ({ ...s, data: cacheState.data }));
+  }, [state.data, opts.cachePolicy, cacheState.data]);
 
   /** On cache invalidation. */
   useEffect(() => {
     if (
-      fetching ||
+      state.fetching ||
       opts.cachePolicy === 'cache-only' ||
       opts.cachePolicy === 'network-only'
     ) {
@@ -136,15 +148,19 @@ export const useFetch = <T = any, D extends string = string>(
     if (cacheState.refetch) {
       doFetch();
     }
-  }, [doFetch, fetching, opts.cachePolicy, cacheState.refetch]);
+  }, [doFetch, state.fetching, opts.cachePolicy, cacheState.refetch]);
 
-  const data = useMemo(
-    () =>
-      responseData !== undefined && opts.parseResponse !== undefined
-        ? opts.parseResponse(responseData)
-        : responseData,
-    [responseData, opts]
+  return useMemo(
+    () => [
+      {
+        ...state,
+        data:
+          state.data !== undefined && opts.parseResponse
+            ? opts.parseResponse(state.data)
+            : state.data,
+      },
+      doFetch,
+    ],
+    [state, doFetch]
   );
-
-  return [{ fetching, error, data }, doFetch];
 };

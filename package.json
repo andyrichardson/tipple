@@ -34,9 +34,9 @@
   },
   "homepage": "https://github.com/andyrichardson/tipple#readme",
   "devDependencies": {
-    "@types/jest": "24.0.17",
-    "@types/react": "16.8.25",
-    "@types/react-test-renderer": "16.8.3",
+    "@types/jest": "24.0.23",
+    "@types/react": "16.9.11",
+    "@types/react-test-renderer": "16.9.1",
     "@typescript-eslint/eslint-plugin": "1.13.0",
     "@typescript-eslint/parser": "1.13.0",
     "eslint": "6.1.0",
@@ -44,15 +44,16 @@
     "eslint-plugin-prettier": "3.1.0",
     "eslint-plugin-react": "7.14.3",
     "eslint-plugin-react-hooks": "^1.6.1",
-    "jest": "24.8.0",
+    "jest": "24.9.0",
     "microbundle": "0.11.0",
     "prettier": "1.18.2",
-    "react": "16.8.6",
-    "react-test-renderer": "16.8.6",
+    "react": "^0.0.0-b53ea6ca0",
+    "react-dom": "^0.0.0-b53ea6ca0",
+    "react-test-renderer": "16.11.0",
     "ts-jest": "24.0.2",
-    "typescript": "3.5.3"
+    "typescript": "3.7.2"
   },
   "peerDependencies": {
-    "react": ">= 16.8.0"
+    "react": ">= 16.11.0"
   }
 }

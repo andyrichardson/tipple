@@ -6,9 +6,11 @@
     "lib": ["dom", "ES2015"],
     "strict": true,
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "declaration": true,
     "outDir": "dist",
     "sourceMap": true
   },
-  "files": ["src/index.ts", "src/types.ts"]
+  "files": ["src/index.ts", "src/types.ts"],
+  "exclude": ["node_modules"]
 }
